@@ -3,40 +3,39 @@ package com.epam.automation.Batsiushkova_Olga.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by Volha_Batsiushkova on 11/24/2016.
  */
-public class LoginPage {
+public class LoginPage
+{
 
-    private WebDriver driver;
+	private WebDriver driver;
 
-    public LoginPage(WebDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+	public LoginPage(WebDriver driver)
+	{
+		this.driver = driver;
     }
 
-    @FindBy(id = "Email")
-    private WebElement inputEmail;
+	@FindBy(id = "identifierId")
+	private WebElement inputEmail;
 
-    @FindBy(id = "next")
-    private WebElement nextButton;
+	@FindBy(xpath = "//content[@class='CwaK9']/span[@class='RveJvd snByac']")
+	private WebElement nextButton;
 
-    @FindBy(id = "Passwd")
-    private WebElement inputPassword;
+	@FindBy(name = "password")
+	private WebElement inputPassword;
 
-    @FindBy(id = "signIn")
-    private WebElement signInButton;
-
-
-    public HomePage signIn(String username, String password) {
-        inputEmail.sendKeys(username);
-        nextButton.click();
-        inputPassword.sendKeys(password);
-        signInButton.click();
-        return new HomePage();
+	public void signIn(String username, String password)
+	{
+    	inputEmail.sendKeys(username);
+		nextButton.click();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(inputPassword));
+		inputPassword.sendKeys(password);
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(nextButton));
+		nextButton.click();
     }
-
 
 }
