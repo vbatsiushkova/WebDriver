@@ -50,10 +50,7 @@ public class MailPage
 	WebElement sentPage;
 
 	@FindBy(xpath = "//tbody//tr[@class='zA yO']")
-	WebElement draftMails;
-
-	@FindBy(xpath = "//tbody//tr[@class='zA zE']")
-	WebElement sentMails;
+	WebElement mailTable;
 
 	@FindBy(xpath = "//div[@class = 'aoD hl']")
 	WebElement draftAddressEmail;
@@ -85,7 +82,7 @@ public class MailPage
 	{
         draftPage.click();
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        //Waiter.wait(driver, draftMails);
+
 	}
 
 	public List<WebElement> getListofCreatedDraftMail()
@@ -138,24 +135,18 @@ public class MailPage
 		sendButton.click();
 	}
 
-	public  int getSizeofDraftMails(){
-		driver.navigate().refresh();
-		Waiter.wait(driver, draftMails);
-		List<WebElement> draftEmailListBefore = driver.findElements(By.xpath("//tbody//tr[@class='zA yO']"));
-		return draftEmailListBefore.size();
-	}
 
 	public void openSentPage(){
 		sentPage.click();
-		Waiter.wait(driver, sentMails );
+		Waiter.wait(driver, mailTable );
 
 	}
 
-	public int getSizeSentMails() throws InterruptedException
+	public int getListSizeMails() throws InterruptedException
 	{
 		driver.navigate().refresh();
-		Waiter.wait(driver, sentMails);
-		List<WebElement> mailList = driver.findElements(By.tagName("tr"));
+		Waiter.wait(driver, mailTable);
+		List<WebElement> mailList = driver.findElements(By.xpath("//tbody//tr[@class='zA yO']"));
 		return mailList.size();
 
 	}

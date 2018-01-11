@@ -91,9 +91,9 @@ public class TestExample
 		loginPage.signIn(USERNAME1, PASSWORD);
 		startPage.openMailPage();
 		mailPage.openDraftPage();
-		int draftMailsBefore = mailPage.getSizeofDraftMails();
+		int draftMailsBefore = mailPage.getListSizeMails();
 		mailPage.sendDraftMail();
-		int draftMailAfter = mailPage.getSizeofDraftMails();
+		int draftMailAfter = mailPage.getListSizeMails();
 		assertEquals(draftMailAfter, draftMailsBefore - 1);
 
 	}
@@ -107,11 +107,11 @@ public class TestExample
 		loginPage.signIn(USERNAME1, PASSWORD);
 		startPage.openMailPage();
 		mailPage.openSentPage();
-		int sentMailsBefore = mailPage.getSizeSentMails();
+		int sentMailsBefore = mailPage.getListSizeMails();
 		mailPage.openDraftPage();
 		mailPage.sendDraftMail();
 		mailPage.openSentPage();
-		int sentMailsAfter = mailPage.getSizeSentMails();
+		int sentMailsAfter = mailPage.getListSizeMails();
 		assertEquals(sentMailsAfter,sentMailsBefore);
 	}
 
