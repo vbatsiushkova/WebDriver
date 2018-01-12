@@ -14,7 +14,13 @@ public class Waiter
 
 	public static void wait(WebDriver driver, WebElement webElement){
 
-		new WebDriverWait(driver, 20).until(ExpectedConditions.elementToBeClickable(webElement));
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(webElement));
+
+	}
+
+	public static void waitElementAbsent(WebDriver driver, WebElement webElement){
+
+		new WebDriverWait(driver, 20).until(ExpectedConditions.invisibilityOf(webElement));
 
 	}
 }

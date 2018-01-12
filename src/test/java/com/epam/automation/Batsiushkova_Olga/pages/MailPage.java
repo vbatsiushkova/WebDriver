@@ -2,13 +2,17 @@ package com.epam.automation.Batsiushkova_Olga.pages;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Created by Volha_Batsiushkova on 1/7/2018.
@@ -23,7 +27,6 @@ public class MailPage
 	}
 
 	List<WebElement> draftEmailList;
-	int tempValue = 1;
 
 	@FindBy(xpath = "//*[@id=':i']/span[text()='Gmail']")
 	WebElement gmailPageLabel;
@@ -43,14 +46,11 @@ public class MailPage
 	@FindBy(xpath = "//td[@class='Hm']/img[@class='Ha']")
 	WebElement closePopUpMail;
 
-	@FindBy(css = "a[href*='drafts']")
+	@FindBy(css = "a[href*='mail/#drafts']")
 	WebElement draftPage;
 
-	@FindBy(css = "a[href*='sent']")
+	@FindBy(css = "a[href*='mail/#sent']")
 	WebElement sentPage;
-
-	@FindBy(xpath = "//tbody//tr[@class='zA yO']")
-	WebElement mailTable;
 
 	@FindBy(xpath = "//div[@class = 'aoD hl']")
 	WebElement draftAddressEmail;
@@ -61,9 +61,10 @@ public class MailPage
 	@FindBy(xpath = "//td[@class='gU Up']")
 	WebElement sendButton;
 
-	@FindBy(xpath = "//tbody//tr[@class='zA zE']")
-	WebElement sentList;
+	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf']//tr//*[@class='bog']")
+	WebElement getNewlyCreatedMailInDraft;
 
+	
 	public void createDraftMail(String address, String subject, String body)
 	{
 		Waiter.wait(driver, gmailPageLabel);
@@ -71,84 +72,98 @@ public class MailPage
 		openMailPopUp.click();
 		Waiter.wait(driver, addressField);
 		addressField.sendKeys(address);
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		subjectField.sendKeys(subject);
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		bodyField.click();
 		bodyField.sendKeys(body);
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		closePopUpMail.click();
 	}
 
 	public void openDraftPage()
 	{
-        draftPage.click();
+		assertTrue(draftPage.isDisplayed());
+		draftPage.click();
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-
-	}
-
-	public List<WebElement> getListofCreatedDraftMail()
-	{
-		draftEmailList = driver.findElements(By.xpath("//div[@class='Cp']//tr[@class = 'zA yO']"));
-		return draftEmailList;
-	}
-
-	public WebElement getBodyCreatedAttribute() throws InterruptedException
-	{
-
-		WebElement bodyofTheMail = getListofCreatedDraftMail().get(0).findElement(By.xpath("//tr//div[@class='xS']"));
-        highlightElement(bodyofTheMail);
-		return bodyofTheMail;
 	}
 
 	public String actualAddress() throws InterruptedException
 	{
-		highlightElement(draftAddressEmail);
 		return draftAddressEmail.getText();
 	}
 
 	public String actualSubject() throws InterruptedException
 	{
 
-		highlightElement(draftSubject);
 		return draftSubject.getText();
 	}
 
 	public String actualBody() throws InterruptedException
 	{
-		highlightElement(bodyField);
 		return bodyField.getText();
-	}
-
-	public void highlightElement(WebElement element) throws InterruptedException
-	{
-		String bg = element.getCssValue("backgroundColor");
-		JavascriptExecutor js = ((JavascriptExecutor) driver);
-		js.executeScript("arguments[0].style.backgroundColor = '" + "yellow" + "'", element);
-		// take screenshot here
-		// or just pause/blink
-		Thread.sleep(500);
-		js.executeScript("arguments[0].style.backgroundColor = '" + bg + "'", element);
 	}
 
 	public void sendDraftMail() throws InterruptedException
 	{
-		getBodyCreatedAttribute().click();
+		Waiter.wait(driver, getNewlyCreatedMailInDraft);
+		getNewlyCreatedMailInDraft.click();
+		Waiter.wait(driver, sendButton);
 		sendButton.click();
-	}
-
-
-	public void openSentPage(){
-		sentPage.click();
-		Waiter.wait(driver, mailTable );
-
-	}
-
-	public int getListSizeMails() throws InterruptedException
-	{
+		Waiter.waitElementAbsent(driver, sendButton);
 		driver.navigate().refresh();
-		Waiter.wait(driver, mailTable);
-		List<WebElement> mailList = driver.findElements(By.xpath("//tbody//tr[@class='zA yO']"));
-		return mailList.size();
+		driver.switchTo().alert().accept();
+		assertTrue(draftPage.isDisplayed());
 
+	}
+
+	public void openSentPage()
+	{
+		assertTrue(sentPage.isDisplayed());
+		sentPage.click();
+		driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
+
+
+	}
+
+	public int getCountDraftMails()
+	{
+
+		return parsingString(draftPage.getText());
+	}
+	
+
+	public int parsingString(String stringValue)
+	{
+		String value = null;
+		Pattern p = Pattern.compile("[0-9]+");
+		Matcher m = p.matcher(stringValue);
+		while (m.find())
+		{
+			value = m.group();
+		}
+		return Integer.parseInt(value);
+	}
+
+
+	public WebElement getCountSentMail(){
+		List<WebElement>  listSentMails = driver.findElements(By.xpath("//div[@class='BltHke nH oy8Mbf']"));
+		WebElement listsentemail= listSentMails.get(1);
+
+		return listsentemail.findElement(By.xpath("//tr//*[@class='bog']"));
+	}
+
+	public boolean isAlertPresent()
+	{
+		try
+		{
+			driver.switchTo().alert();
+			return true;
+		}   // try
+		catch (NoAlertPresentException Ex)
+		{
+			return false;
+		}   // catch
 	}
 }
 
