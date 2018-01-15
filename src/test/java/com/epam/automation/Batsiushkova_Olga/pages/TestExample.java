@@ -5,10 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Random;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -18,25 +17,22 @@ import static org.testng.Assert.assertTrue;
  */
 public class TestExample
 {
-	public  final String BASE_URL = "https://www.google.by";
+	public final String BASE_URL = "https://www.google.by";
 	private final String USERNAME1 = "OBVTest0";
 	private final String USERNAME2 = "OBVTest1";
 	private final String PASSWORD = "12345678OB";
-	private final String ADDRESS= getSaltString()+"@mail.ru" ;
-	private final String SUBJECT =getSaltString();
-	private final String BODY=getSaltString();
 
 	static WebDriver driver;
 	StartPage startPage;
 	LoginPage loginPage;
-	MailPage mailPage;
+	DraftPage mailPage;
+	SentPage sentPage;
 	AccountInformationPopUp accountInformation;
+	RandomStringGeneratot randomStringGeneratot = new RandomStringGeneratot();
 
-
-
-
-
-	
+	String address = randomStringGeneratot.generateString() + "@mail.ru";
+	String subject = randomStringGeneratot.generateString();
+	String body = randomStringGeneratot.generateString();
 
 	@BeforeMethod
 	public void precondition()
@@ -47,8 +43,9 @@ public class TestExample
 		driver = new ChromeDriver();
 		startPage = PageFactory.initElements(driver, StartPage.class);
 		loginPage = PageFactory.initElements(driver, LoginPage.class);
-		mailPage = PageFactory.initElements(driver, MailPage.class);
-		accountInformation=PageFactory.initElements(driver, AccountInformationPopUp.class);
+		mailPage = PageFactory.initElements(driver, DraftPage.class);
+		sentPage = PageFactory.initElements(driver, SentPage.class);
+		accountInformation = PageFactory.initElements(driver, AccountInformationPopUp.class);
 
 	}
 
@@ -57,11 +54,10 @@ public class TestExample
 	public void openLoginPage()
 	{
 		startPage.openSite(BASE_URL);
-        startPage.invokeSignIn();
+		startPage.invokeSignIn();
 		loginPage.signIn(USERNAME1, PASSWORD);
-        String actualLoginName = accountInformation.checkUserAccount();
+		String actualLoginName = accountInformation.checkUserAccount();
 		assertTrue(actualLoginName.contains(USERNAME1.toLowerCase()));
-
 	}
 
 	@Test
@@ -73,16 +69,16 @@ public class TestExample
 		startPage.invokeSignIn();
 		loginPage.signIn(USERNAME1, PASSWORD);
 		startPage.openMailPage();
-      	mailPage.createDraftMail(ADDRESS, SUBJECT, BODY);
+		mailPage.createDraftMail(address, subject, body);
 		mailPage.openDraftPage();
-		String createdMail = mailPage.getNewlyCreatedMailInDraft.getText();
-       assertTrue(createdMail.contains(SUBJECT));
-       mailPage.getNewlyCreatedMailInDraft.click();
-		assertEquals(mailPage.actualAddress(), ADDRESS);
-		//assertEquals(mailPage.actualSubject(), SUBJECT);
-		assertEquals(mailPage.actualBody(), BODY);
+		String createdMail = mailPage.getNewlyCreatedMailInDraft().getText();
+		assertTrue(createdMail.contains(subject));
+		mailPage.getNewlyCreatedMailInDraft().click();
+		assertEquals(mailPage.actualAddress(), address);
+		assertEquals(mailPage.actualSubject(), subject);
+		assertEquals(mailPage.actualBody(), body);
 	}
-	
+
 	@Test
 	@Description("Send the latest draft mail")
 	public void sendDraftMail() throws InterruptedException
@@ -91,6 +87,7 @@ public class TestExample
 		startPage.invokeSignIn();
 		loginPage.signIn(USERNAME1, PASSWORD);
 		startPage.openMailPage();
+		mailPage.createDraftMail(address, subject, body);
 		mailPage.openDraftPage();
 		int draftMailsBefore = mailPage.getCountDraftMails();
 		mailPage.sendDraftMail();
@@ -107,38 +104,34 @@ public class TestExample
 		startPage.invokeSignIn();
 		loginPage.signIn(USERNAME1, PASSWORD);
 		startPage.openMailPage();
-		mailPage.createDraftMail(ADDRESS, SUBJECT, BODY);
+		mailPage.createDraftMail(address, subject, body);
 		mailPage.openDraftPage();
 		mailPage.sendDraftMail();
-		mailPage.openSentPage();
-		mailPage.getCountSentMail().click();
-
-
-
-		
+		sentPage.openSentPage();
+		sentPage.getFirstSentMail().click();
+		String subjectSendingMail = sentPage.getsubjectSendingMail().getText();
+		assertEquals(subjectSendingMail, subject);
+		//mailPage.deleteSentMessage();
 	}
 
-
-	protected String getSaltString() {
-		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-		StringBuilder salt = new StringBuilder();
-		Random rnd = new Random();
-		while (salt.length() < 10) { // length of the random string.
-			int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-			salt.append(SALTCHARS.charAt(index));
-		}
-		String saltStr = salt.toString();
-		return saltStr;
-
+	@Test
+	@Description("log out")
+	public void logOut()
+	{
+		startPage.openSite(BASE_URL);
+		startPage.invokeSignIn();
+		loginPage.signIn(USERNAME1, PASSWORD);
+		accountInformation.logOut();
+		assertTrue(startPage.getloginButton().isDisplayed());
 	}
 
+	@AfterMethod
 
-//	@AfterMethod
-//
-//	public void afterMethod() {
-//
-//		driver.quit();
-//
-//	}
+	public void afterMethod()
+	{
+
+		driver.quit();
+
+	}
 
 }

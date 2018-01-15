@@ -12,20 +12,19 @@ import java.util.concurrent.TimeUnit;
 public class StartPage
 {
 
-
 	private WebDriver driver;
-
-	@FindBy(xpath = "//*[@id='gb_70']")
-	private WebElement loginButton;
-
-	@FindBy(partialLinkText = "Gmail")
-	private WebElement mailPageLink;
 
 	public StartPage(WebDriver driver)
 	{
 		this.driver = driver;
 
 	}
+
+	@FindBy(xpath = "//*[@id='gb_70']")
+	private WebElement loginButton;
+
+	@FindBy(partialLinkText = "Gmail")
+	private WebElement mailPageLink;
 
 	public void openSite(String base_url)
 	{
@@ -34,17 +33,19 @@ public class StartPage
 
 	public LoginPage invokeSignIn()
 	{
-			loginButton.click();
+		loginButton.click();
 		return new LoginPage(driver);
 	}
 
-	public MailPage openMailPage()
+	public DraftPage openMailPage()
 	{
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		mailPageLink.click();
-		return new MailPage(driver);
+		return new DraftPage(driver);
 	}
 
-
+	public WebElement getloginButton(){
+		return loginButton;
+	}
 
 }
