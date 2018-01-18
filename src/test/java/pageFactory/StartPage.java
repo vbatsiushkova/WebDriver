@@ -1,10 +1,8 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package pageFactory;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Volha_Batsiushkova on 11/24/2016.
@@ -39,7 +37,7 @@ public class StartPage
 
 	public DraftPage openMailPage()
 	{
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+
 		mailPageLink.click();
 		return new DraftPage(driver);
 	}

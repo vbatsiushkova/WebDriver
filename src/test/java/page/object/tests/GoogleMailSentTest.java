@@ -1,6 +1,8 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package page.object.tests;
 
+import pageFactory.*;
 import com.sun.org.glassfish.gmbal.Description;
+import helpers.HelperMethods;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -9,13 +11,15 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
  * Created by Volha_Batsiushkova on 11/24/2016.
  */
-public class TestExample
+public class GoogleMailSentTest
 {
 	public final String BASE_URL = "https://www.google.by";
 	private final String USERNAME1 = "OBVTest0";
@@ -28,7 +32,7 @@ public class TestExample
 	DraftPage mailPage;
 	SentPage sentPage;
 	AccountInformationPopUp accountInformation;
-	RandomStringGeneratot randomStringGeneratot = new RandomStringGeneratot();
+	HelperMethods randomStringGeneratot = new HelperMethods();
 
 	String address = randomStringGeneratot.generateString() + "@mail.ru";
 	String subject = randomStringGeneratot.generateString();
@@ -41,6 +45,7 @@ public class TestExample
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("start-maximized");
 		driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		startPage = PageFactory.initElements(driver, StartPage.class);
 		loginPage = PageFactory.initElements(driver, LoginPage.class);
 		mailPage = PageFactory.initElements(driver, DraftPage.class);
@@ -64,7 +69,6 @@ public class TestExample
 	@Description("Cretaed Mail is saved as draft")
 	public void cretedDraftMail() throws InterruptedException
 	{
-
 		startPage.openSite(BASE_URL);
 		startPage.invokeSignIn();
 		loginPage.signIn(USERNAME1, PASSWORD);

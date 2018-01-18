@@ -1,4 +1,4 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package pageFactory;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,11 +7,11 @@ import org.openqa.selenium.support.FindBy;
 /**
  * Created by Volha_Batsiushkova on 1/13/2018.
  */
-public class AbstracMailPage
+public class AbstractMailPage
 {
 	WebDriver driver;
 
-	public AbstracMailPage(WebDriver driver)
+	public AbstractMailPage(WebDriver driver)
 	{
 		this.driver = driver;
 	}

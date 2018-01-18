@@ -1,4 +1,4 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package helpers;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,14 +14,13 @@ public class Waiter
 
 	public static void wait(WebDriver driver, WebElement webElement){
 
-		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(webElement));
+		new WebDriverWait(driver, 40).until(ExpectedConditions.visibilityOf(webElement));
 
 	}
 
-	public static void waitisClickable(WebDriver driver, WebElement webElement){
+	public static void waitElementIsAbsent(WebDriver driver, WebElement webElement, String text){
 
-		new WebDriverWait(driver, 20).until(ExpectedConditions.elementToBeClickable(webElement));
-
+		new WebDriverWait(driver, 40).until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(webElement, text)));
 	}
 
 

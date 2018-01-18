@@ -1,5 +1,6 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package pageFactory;
 
+import helpers.Waiter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -34,7 +35,7 @@ public class LoginPage
 		inputPassword.sendKeys(password);
 		Waiter.wait(driver, nextButton);
 		nextButton.click();
-						return new StartPage(driver);
+		return new StartPage(driver);
 	}
 
 }

@@ -1,11 +1,13 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package helpers;
 
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Volha_Batsiushkova on 1/13/2018.
  */
-public class RandomStringGeneratot
+public class HelperMethods
 {
 	public String generateString()
 	{
@@ -19,6 +21,17 @@ public class RandomStringGeneratot
 		}
 		String charStr = stringBuilder.toString();
 		return charStr;
+	}
 
+	public String parsingString(String stringValue)
+	{
+		String value = null;
+		Pattern p = Pattern.compile("[0-9]+");
+		Matcher m = p.matcher(stringValue);
+		while (m.find())
+		{
+			value = m.group();
+		}
+		return value;
 	}
 }

@@ -1,5 +1,6 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package pageFactory;
 
+import helpers.Waiter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

@@ -1,5 +1,6 @@
-package com.epam.automation.Batsiushkova_Olga.pages;
+package pageFactory;
 
+import helpers.Waiter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,12 +8,10 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
-import static org.testng.AssertJUnit.assertTrue;
-
 /**
  * Created by Volha_Batsiushkova on 1/13/2018.
  */
-public class SentPage extends AbstracMailPage
+public class SentPage extends AbstractMailPage
 {
 	public SentPage(WebDriver driver)
 	{
@@ -30,9 +29,9 @@ public class SentPage extends AbstracMailPage
 
 	public void openSentPage() throws InterruptedException
 	{
-		assertTrue(sentPage.isDisplayed());
 		sentPage.click();
-		Thread.sleep(1000);
+		Thread.sleep(500);
+
 	}
 
 	public WebElement getFirstSentMail() throws InterruptedException
@@ -54,10 +53,9 @@ public class SentPage extends AbstracMailPage
 		driver.switchTo().alert().accept();
 	}
 
-
-	public WebElement getsubjectSendingMail(){
+	public WebElement getsubjectSendingMail()
+	{
 		return subjectSendingMail;
 	}
-
 
 }
