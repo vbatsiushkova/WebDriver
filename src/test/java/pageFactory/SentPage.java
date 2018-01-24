@@ -2,8 +2,10 @@ package pageFactory;
 
 import helpers.Waiter;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
@@ -21,11 +23,14 @@ public class SentPage extends AbstractMailPage
 	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf' and @role='main']//tr//*[@role='checkbox']")
 	private WebElement checkbox;
 
-	@FindBy(xpath = "//td[@class='Bu']//h2")
+	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf' and @role='main']//span[@class='bog']")
 	private WebElement subjectSendingMail;
 
-	@FindBy(xpath = "//div[@aria-label='Delete']")
+	@FindBy(xpath = "//div[@class='D E G-atb G-pMpUR-SBEKme' and @gh='tm']//div[@aria-label='Delete']")
 	private WebElement deleteButton;
+
+	@FindBy(name = "ok")
+	private WebElement okButton;
 
 	public void openSentPage() throws InterruptedException
 	{
@@ -43,13 +48,13 @@ public class SentPage extends AbstractMailPage
 
 	public void deleteSentMessage() throws InterruptedException
 	{
-
+		Actions action = new Actions(driver);
+		JavascriptExecutor jsExec = (JavascriptExecutor) driver;
 		sentPage.click();
-		Thread.sleep(1000);
-		Waiter.wait(driver, checkbox);
+		Thread.sleep(2000);
 		checkbox.click();
-		Thread.sleep(1000);
-		deleteButton.click();
+		jsExec.executeScript("arguments[0].click()", deleteButton);
+		Waiter.waitAlert(driver);
 		driver.switchTo().alert().accept();
 	}
 
@@ -57,5 +62,8 @@ public class SentPage extends AbstractMailPage
 	{
 		return subjectSendingMail;
 	}
+
+
+
 
 }

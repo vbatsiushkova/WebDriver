@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Waiter
 {
-	
 
 	public static void wait(WebDriver driver, WebElement webElement){
 
@@ -21,6 +20,14 @@ public class Waiter
 	public static void waitElementIsAbsent(WebDriver driver, WebElement webElement, String text){
 
 		new WebDriverWait(driver, 40).until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(webElement, text)));
+	}
+
+	public static void waitAlert(WebDriver driver){
+		new WebDriverWait(driver, 40).until(ExpectedConditions.alertIsPresent());
+	}
+
+	public static void waitElementisClickable(WebDriver driver, WebElement webElement){
+		new WebDriverWait(driver,40).until(ExpectedConditions.elementToBeClickable(webElement));
 	}
 
 

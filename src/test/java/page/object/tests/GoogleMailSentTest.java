@@ -1,15 +1,15 @@
 package page.object.tests;
 
-import pageFactory.*;
 import com.sun.org.glassfish.gmbal.Description;
 import helpers.HelperMethods;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pageFactory.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +31,7 @@ public class GoogleMailSentTest
 	LoginPage loginPage;
 	DraftPage mailPage;
 	SentPage sentPage;
+	InboxPage inboxPage;
 	AccountInformationPopUp accountInformation;
 	HelperMethods randomStringGeneratot = new HelperMethods();
 
@@ -50,6 +51,7 @@ public class GoogleMailSentTest
 		loginPage = PageFactory.initElements(driver, LoginPage.class);
 		mailPage = PageFactory.initElements(driver, DraftPage.class);
 		sentPage = PageFactory.initElements(driver, SentPage.class);
+		inboxPage = PageFactory.initElements(driver, InboxPage.class);
 		accountInformation = PageFactory.initElements(driver, AccountInformationPopUp.class);
 
 	}
@@ -113,10 +115,46 @@ public class GoogleMailSentTest
 		mailPage.sendDraftMail();
 		sentPage.openSentPage();
 		sentPage.getFirstSentMail().click();
-		String subjectSendingMail = sentPage.getsubjectSendingMail().getText();
+		WebElement subjectSendingMailElement= sentPage.getsubjectSendingMail();
+		String subjectSendingMail = subjectSendingMailElement.getText();
 		assertEquals(subjectSendingMail, subject);
-		//mailPage.deleteSentMessage();
+		sentPage.deleteSentMessage();
+		assertTrue(!subjectSendingMailElement.isDisplayed() );
 	}
+
+	@Test
+	@Description("Move mail to social tab")
+	public void moveMailToSocialTab()
+	{
+		startPage.openSite(BASE_URL);
+		startPage.invokeSignIn();
+		loginPage.signIn(USERNAME1, PASSWORD);
+		startPage.openInboxMailPage();
+		String inboxMailPrimary = inboxPage.getBodyInboxMail();
+		inboxPage.openContextMenu();
+		inboxPage.openSocialTab();
+		String inboxMailSocial = inboxPage.getTheLastSocialMail();
+		assertEquals(inboxMailPrimary,inboxMailSocial );
+	}
+
+	@Test
+	@Description("Move mail to promotions tab via drag and drop action")
+	public void moveMailToPromotionsTab() throws InterruptedException
+	{
+		startPage.openSite(BASE_URL);
+		startPage.invokeSignIn();
+		loginPage.signIn(USERNAME1, PASSWORD);
+		startPage.openInboxMailPage();
+		String inboxMailPrimary = inboxPage.getBodyInboxMail();
+		inboxPage.dragAnddropMailToPromotionsTab();
+		inboxPage.openPromotionsTab();
+		String inboxMailPromotions = inboxPage.getTheLastSocialMail();
+		assertEquals(inboxMailPromotions, inboxMailPrimary);
+	}
+
+
+
+
 
 	@Test
 	@Description("log out")
@@ -129,13 +167,13 @@ public class GoogleMailSentTest
 		assertTrue(startPage.getloginButton().isDisplayed());
 	}
 
-	@AfterMethod
-
-	public void afterMethod()
-	{
-
-		driver.quit();
-
-	}
+//	@AfterMethod
+//
+//	public void afterMethod()
+//	{
+//
+//		driver.quit();
+//
+//	}
 
 }

@@ -42,6 +42,12 @@ public class StartPage
 		return new DraftPage(driver);
 	}
 
+	public InboxPage openInboxMailPage()
+	{
+        mailPageLink.click();
+		return new InboxPage(driver);
+	}
+
 	public WebElement getloginButton(){
 		return loginButton;
 	}
