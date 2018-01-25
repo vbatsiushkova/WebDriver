@@ -1,16 +1,18 @@
 package page.object.tests;
 
 import com.sun.org.glassfish.gmbal.Description;
+import helpers.Browser;
 import helpers.HelperMethods;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageFactory.*;
 
+import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertEquals;
@@ -26,7 +28,8 @@ public class GoogleMailSentTest
 	private final String USERNAME2 = "OBVTest1";
 	private final String PASSWORD = "12345678OB";
 
-	static WebDriver driver;
+	public static RemoteWebDriver driver;
+//	static WebDriver driver;
 	StartPage startPage;
 	LoginPage loginPage;
 	DraftPage mailPage;
@@ -40,12 +43,28 @@ public class GoogleMailSentTest
 	String body = randomStringGeneratot.generateString();
 
 	@BeforeMethod
-	public void precondition()
+	@Parameters({"browser"})
+	public void precondition(String browser) throws MalformedURLException
 	{
-		System.setProperty("webdriver.chrome.driver", "d:\\Install\\WebDriver\\chromedriver.exe");
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("start-maximized");
-		driver = new ChromeDriver();
+//		System.setProperty("webdriver.chrome.driver", "d:\\Install\\WebDriver\\chromedriver.exe");
+//		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+//		MutableCapabilities chromeOptions = new ChromeOptions();
+//		MutableCapabilities firefoxOptions=new FirefoxOptions();
+//		chromeOptions.setCapability("platformName",Platform.WINDOWS);
+//
+//		try{
+//			driver = new RemoteWebDriver(new URL("http://localhost:4443/wd/hub"), chromeOptions);
+//		}catch(MalformedURLException e){
+//			e.printStackTrace();
+//		}
+//
+//		ChromeOptions options = new ChromeOptions();
+//		options.addArguments("start-maximized");
+		//driver = new ChromeDriver();
+
+
+		driver = Browser.getDriver(browser);
+		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		startPage = PageFactory.initElements(driver, StartPage.class);
 		loginPage = PageFactory.initElements(driver, LoginPage.class);
@@ -152,10 +171,6 @@ public class GoogleMailSentTest
 		assertEquals(inboxMailPromotions, inboxMailPrimary);
 	}
 
-
-
-
-
 	@Test
 	@Description("log out")
 	public void logOut()
@@ -167,13 +182,13 @@ public class GoogleMailSentTest
 		assertTrue(startPage.getloginButton().isDisplayed());
 	}
 
-//	@AfterMethod
-//
-//	public void afterMethod()
-//	{
-//
-//		driver.quit();
-//
-//	}
+	@AfterMethod
+
+	public void afterMethod()
+	{
+
+		driver.quit();
+
+	}
 
 }
