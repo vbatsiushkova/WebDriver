@@ -29,7 +29,7 @@ public class GoogleMailSentTest
 	private final String PASSWORD = "12345678OB";
 
 	public static RemoteWebDriver driver;
-//	static WebDriver driver;
+	//	static WebDriver driver;
 	StartPage startPage;
 	LoginPage loginPage;
 	DraftPage mailPage;
@@ -42,10 +42,23 @@ public class GoogleMailSentTest
 	String subject = randomStringGeneratot.generateString();
 	String body = randomStringGeneratot.generateString();
 
-	@BeforeMethod
-	@Parameters({"browser"})
-	public void precondition(String browser) throws MalformedURLException
-	{
+//	@BeforeSuite
+//	public void runHubAndNodes() throws IOException
+//	{
+//		List<String> path = Browser.pathBatFileList();
+//		path.forEach(c->{
+//			try {
+//				String[] command = {c};
+//				Process p =  Runtime.getRuntime().exec(command);
+//			} catch (IOException ex) {
+//			}
+//		});
+//	}
+
+		@BeforeMethod
+		@Parameters({ "browser" })
+		public void precondition (String browser) throws MalformedURLException
+		{
 //		System.setProperty("webdriver.chrome.driver", "d:\\Install\\WebDriver\\chromedriver.exe");
 //		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 //		MutableCapabilities chromeOptions = new ChromeOptions();
@@ -60,134 +73,133 @@ public class GoogleMailSentTest
 //
 //		ChromeOptions options = new ChromeOptions();
 //		options.addArguments("start-maximized");
-		//driver = new ChromeDriver();
+			//driver = new ChromeDriver();
 
+			driver = Browser.getDriver(browser);
+			driver.manage().window().maximize();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			startPage = PageFactory.initElements(driver, StartPage.class);
+			loginPage = PageFactory.initElements(driver, LoginPage.class);
+			mailPage = PageFactory.initElements(driver, DraftPage.class);
+			sentPage = PageFactory.initElements(driver, SentPage.class);
+			inboxPage = PageFactory.initElements(driver, InboxPage.class);
+			accountInformation = PageFactory.initElements(driver, AccountInformationPopUp.class);
 
-		driver = Browser.getDriver(browser);
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		startPage = PageFactory.initElements(driver, StartPage.class);
-		loginPage = PageFactory.initElements(driver, LoginPage.class);
-		mailPage = PageFactory.initElements(driver, DraftPage.class);
-		sentPage = PageFactory.initElements(driver, SentPage.class);
-		inboxPage = PageFactory.initElements(driver, InboxPage.class);
-		accountInformation = PageFactory.initElements(driver, AccountInformationPopUp.class);
+		}
+
+		@Test
+		@Description("Login to the MailBox ")
+		public void openLoginPage ()
+		{
+			startPage.openSite(BASE_URL);
+			startPage.invokeSignIn();
+			loginPage.signIn(USERNAME1, PASSWORD);
+			String actualLoginName = accountInformation.checkUserAccount();
+			assertTrue(actualLoginName.contains(USERNAME1.toLowerCase()));
+		}
+
+		@Test
+		@Description("Cretaed Mail is saved as draft")
+		public void cretedDraftMail () throws InterruptedException
+		{
+			startPage.openSite(BASE_URL);
+			startPage.invokeSignIn();
+			loginPage.signIn(USERNAME1, PASSWORD);
+			startPage.openMailPage();
+			mailPage.createDraftMail(address, subject, body);
+			mailPage.openDraftPage();
+			String createdMail = mailPage.getNewlyCreatedMailInDraft().getText();
+			assertTrue(createdMail.contains(subject));
+			mailPage.getNewlyCreatedMailInDraft().click();
+			assertEquals(mailPage.actualAddress(), address);
+			assertEquals(mailPage.actualSubject(), subject);
+			assertEquals(mailPage.actualBody(), body);
+		}
+
+		@Test
+		@Description("Send the latest draft mail")
+		public void sendDraftMail () throws InterruptedException
+		{
+			startPage.openSite(BASE_URL);
+			startPage.invokeSignIn();
+			loginPage.signIn(USERNAME1, PASSWORD);
+			startPage.openMailPage();
+			mailPage.createDraftMail(address, subject, body);
+			mailPage.openDraftPage();
+			int draftMailsBefore = mailPage.getCountDraftMails();
+			mailPage.sendDraftMail();
+			int draftMailAfter = mailPage.getCountDraftMails();
+			assertEquals(draftMailAfter, draftMailsBefore - 1);
+
+		}
+
+		@Test
+		@Description("Send the latest draft mail")
+		public void mailIsSent () throws InterruptedException
+		{
+			startPage.openSite(BASE_URL);
+			startPage.invokeSignIn();
+			loginPage.signIn(USERNAME1, PASSWORD);
+			startPage.openMailPage();
+			mailPage.createDraftMail(address, subject, body);
+			mailPage.openDraftPage();
+			mailPage.sendDraftMail();
+			sentPage.openSentPage();
+			sentPage.getFirstSentMail().click();
+			WebElement subjectSendingMailElement = sentPage.getsubjectSendingMail();
+			String subjectSendingMail = subjectSendingMailElement.getText();
+			assertEquals(subjectSendingMail, subject);
+			sentPage.deleteSentMessage();
+			assertTrue(!subjectSendingMailElement.isDisplayed());
+		}
+
+		@Test
+		@Description("Move mail to social tab")
+		public void moveMailToSocialTab ()
+		{
+			startPage.openSite(BASE_URL);
+			startPage.invokeSignIn();
+			loginPage.signIn(USERNAME1, PASSWORD);
+			startPage.openInboxMailPage();
+			String inboxMailPrimary = inboxPage.getBodyInboxMail();
+			inboxPage.openContextMenu();
+			inboxPage.openSocialTab();
+			String inboxMailSocial = inboxPage.getTheLastSocialMail();
+			assertEquals(inboxMailPrimary, inboxMailSocial);
+		}
+
+		@Test
+		@Description("Move mail to promotions tab via drag and drop action")
+		public void moveMailToPromotionsTab () throws InterruptedException
+		{
+			startPage.openSite(BASE_URL);
+			startPage.invokeSignIn();
+			loginPage.signIn(USERNAME1, PASSWORD);
+			startPage.openInboxMailPage();
+			String inboxMailPrimary = inboxPage.getBodyInboxMail();
+			inboxPage.dragAnddropMailToPromotionsTab();
+			inboxPage.openPromotionsTab();
+			String inboxMailPromotions = inboxPage.getTheLastSocialMail();
+			assertEquals(inboxMailPromotions, inboxMailPrimary);
+		}
+
+		@Test
+		@Description("log out")
+		public void logOut ()
+		{
+			startPage.openSite(BASE_URL);
+			startPage.invokeSignIn();
+			loginPage.signIn(USERNAME1, PASSWORD);
+			accountInformation.logOut();
+			assertTrue(startPage.getloginButton().isDisplayed());
+		}
+
+		@AfterMethod
+
+		public void afterMethod ()
+		{
+			driver.quit();
+
+		}
 
 	}
-
-	@Test
-	@Description("Login to the MailBox ")
-	public void openLoginPage()
-	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
-		loginPage.signIn(USERNAME1, PASSWORD);
-		String actualLoginName = accountInformation.checkUserAccount();
-		assertTrue(actualLoginName.contains(USERNAME1.toLowerCase()));
-	}
-
-	@Test
-	@Description("Cretaed Mail is saved as draft")
-	public void cretedDraftMail() throws InterruptedException
-	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
-		loginPage.signIn(USERNAME1, PASSWORD);
-		startPage.openMailPage();
-		mailPage.createDraftMail(address, subject, body);
-		mailPage.openDraftPage();
-		String createdMail = mailPage.getNewlyCreatedMailInDraft().getText();
-		assertTrue(createdMail.contains(subject));
-		mailPage.getNewlyCreatedMailInDraft().click();
-		assertEquals(mailPage.actualAddress(), address);
-		assertEquals(mailPage.actualSubject(), subject);
-		assertEquals(mailPage.actualBody(), body);
-	}
-
-	@Test
-	@Description("Send the latest draft mail")
-	public void sendDraftMail() throws InterruptedException
-	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
-		loginPage.signIn(USERNAME1, PASSWORD);
-		startPage.openMailPage();
-		mailPage.createDraftMail(address, subject, body);
-		mailPage.openDraftPage();
-		int draftMailsBefore = mailPage.getCountDraftMails();
-		mailPage.sendDraftMail();
-		int draftMailAfter = mailPage.getCountDraftMails();
-		assertEquals(draftMailAfter, draftMailsBefore - 1);
-
-	}
-
-	@Test
-	@Description("Send the latest draft mail")
-	public void mailIsSent() throws InterruptedException
-	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
-		loginPage.signIn(USERNAME1, PASSWORD);
-		startPage.openMailPage();
-		mailPage.createDraftMail(address, subject, body);
-		mailPage.openDraftPage();
-		mailPage.sendDraftMail();
-		sentPage.openSentPage();
-		sentPage.getFirstSentMail().click();
-		WebElement subjectSendingMailElement= sentPage.getsubjectSendingMail();
-		String subjectSendingMail = subjectSendingMailElement.getText();
-		assertEquals(subjectSendingMail, subject);
-		sentPage.deleteSentMessage();
-		assertTrue(!subjectSendingMailElement.isDisplayed() );
-	}
-
-	@Test
-	@Description("Move mail to social tab")
-	public void moveMailToSocialTab()
-	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
-		loginPage.signIn(USERNAME1, PASSWORD);
-		startPage.openInboxMailPage();
-		String inboxMailPrimary = inboxPage.getBodyInboxMail();
-		inboxPage.openContextMenu();
-		inboxPage.openSocialTab();
-		String inboxMailSocial = inboxPage.getTheLastSocialMail();
-		assertEquals(inboxMailPrimary,inboxMailSocial );
-	}
-
-	@Test
-	@Description("Move mail to promotions tab via drag and drop action")
-	public void moveMailToPromotionsTab() throws InterruptedException
-	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
-		loginPage.signIn(USERNAME1, PASSWORD);
-		startPage.openInboxMailPage();
-		String inboxMailPrimary = inboxPage.getBodyInboxMail();
-		inboxPage.dragAnddropMailToPromotionsTab();
-		inboxPage.openPromotionsTab();
-		String inboxMailPromotions = inboxPage.getTheLastSocialMail();
-		assertEquals(inboxMailPromotions, inboxMailPrimary);
-	}
-
-	@Test
-	@Description("log out")
-	public void logOut()
-	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
-		loginPage.signIn(USERNAME1, PASSWORD);
-		accountInformation.logOut();
-		assertTrue(startPage.getloginButton().isDisplayed());
-	}
-
-	@AfterMethod
-
-	public void afterMethod()
-	{
-       	driver.quit();
-
-	}
-
-}
