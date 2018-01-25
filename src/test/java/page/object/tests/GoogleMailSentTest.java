@@ -186,8 +186,7 @@ public class GoogleMailSentTest
 
 	public void afterMethod()
 	{
-
-		driver.quit();
+       	driver.quit();
 
 	}
 
