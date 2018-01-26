@@ -7,8 +7,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Volha_Batsiushkova on 1/25/2018.
@@ -17,7 +15,7 @@ public class Browser
 {
 	public static RemoteWebDriver getDriver(String browser) throws MalformedURLException
 	{
-		return new RemoteWebDriver(new URL("http://localhost:4443/wd/hub"), getBrowser(browser));
+		return new RemoteWebDriver(new URL("http://localhost:4442/wd/hub"), getBrowser(browser));
 	}
 
 	private static MutableCapabilities getBrowser(String browserType)
@@ -36,11 +34,11 @@ public class Browser
 		}
 	}
 
-	public static List<String> pathBatFileList(){
-		List<String> path = new ArrayList<String>();
-		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\hub_3.8.1.bat");
-		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\instalChromeNode.bat");
-		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\installFFNode.bat");
-		return path;
-	}
+//	public static List<String> pathBatFileList(){
+//		List<String> path = new ArrayList<String>();
+//		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\hub_3.8.1.bat");
+//		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\instalChromeNode.bat");
+//		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\installFFNode.bat");
+//		return path;
+//	}
 }
