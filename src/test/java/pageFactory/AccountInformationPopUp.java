@@ -17,7 +17,7 @@ public class AccountInformationPopUp
 		this.driver = driver;
 	}
 
-	@FindBy(xpath = "//div[@class='gb_xb']//div[@class='gb_Cb']")
+	@FindBy(xpath = "//div[@aria-label='Account Information']//div[contains(text(),'@gmail.com')]")
 	private WebElement findEmailInPopUpWindow;
 
 	@FindBy(xpath = "//span[@class='gb_ab gbii']")

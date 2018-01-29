@@ -1,15 +1,13 @@
 package page.object.tests;
 
 import com.sun.org.glassfish.gmbal.Description;
+import helpers.Account;
 import helpers.Browser;
 import helpers.HelperMethods;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageFactory.*;
 
 import java.net.MalformedURLException;
@@ -24,9 +22,7 @@ import static org.testng.Assert.assertTrue;
 public class GoogleMailSentTest
 {
 	public final String BASE_URL = "https://www.google.by";
-	private final String USERNAME1 = "OBVTest0";
-	private final String USERNAME2 = "OBVTest1";
-	private final String PASSWORD = "12345678OB";
+	Account account = new Account();
 
 	public static RemoteWebDriver driver;
 	//	static WebDriver driver;
@@ -57,7 +53,7 @@ public class GoogleMailSentTest
 
 		@BeforeMethod
 		@Parameters({ "browser" })
-		public void precondition (String browser) throws MalformedURLException
+		public void precondition (@Optional(value = "chrome") String browser) throws MalformedURLException
 		{
 //		System.setProperty("webdriver.chrome.driver", "d:\\Install\\WebDriver\\chromedriver.exe");
 //		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
@@ -93,9 +89,9 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(USERNAME1, PASSWORD);
+			loginPage.signIn(account.getUSERNAME1(),account.getPASSWORD());
 			String actualLoginName = accountInformation.checkUserAccount();
-			assertTrue(actualLoginName.contains(USERNAME1.toLowerCase()));
+			assertTrue(actualLoginName.contains(account.getUSERNAME1().toLowerCase()));
 		}
 
 		@Test
@@ -104,7 +100,7 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(USERNAME1, PASSWORD);
+			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
 			startPage.openMailPage();
 			mailPage.createDraftMail(address, subject, body);
 			mailPage.openDraftPage();
@@ -122,7 +118,7 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(USERNAME1, PASSWORD);
+			loginPage.signIn(account.getUSERNAME1(),account.getPASSWORD());
 			startPage.openMailPage();
 			mailPage.createDraftMail(address, subject, body);
 			mailPage.openDraftPage();
@@ -139,7 +135,7 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(USERNAME1, PASSWORD);
+			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
 			startPage.openMailPage();
 			mailPage.createDraftMail(address, subject, body);
 			mailPage.openDraftPage();
@@ -159,7 +155,7 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(USERNAME1, PASSWORD);
+			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
 			startPage.openInboxMailPage();
 			String inboxMailPrimary = inboxPage.getBodyInboxMail();
 			inboxPage.openContextMenu();
@@ -174,7 +170,7 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(USERNAME1, PASSWORD);
+			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
 			startPage.openInboxMailPage();
 			String inboxMailPrimary = inboxPage.getBodyInboxMail();
 			inboxPage.dragAnddropMailToPromotionsTab();
@@ -189,7 +185,7 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(USERNAME1, PASSWORD);
+			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
 			accountInformation.logOut();
 			assertTrue(startPage.getloginButton().isDisplayed());
 		}
