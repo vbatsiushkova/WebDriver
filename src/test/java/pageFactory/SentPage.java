@@ -32,14 +32,15 @@ public class SentPage extends AbstractMailPage
 	@FindBy(name = "ok")
 	private WebElement okButton;
 
-	public void openSentPage() throws InterruptedException
+	@Override
+	public void openPage() throws InterruptedException
 	{
 		sentPage.click();
 		Thread.sleep(500);
 
 	}
 
-	public WebElement getFirstSentMail() throws InterruptedException
+	public WebElement getMail() throws InterruptedException
 	{
 		List<WebElement> listSentMails = driver.findElements(By.xpath("//div[@class='BltHke nH oy8Mbf' and @role='main']//tr"));
 		WebElement listsentemail = listSentMails.get(0);
@@ -62,8 +63,4 @@ public class SentPage extends AbstractMailPage
 	{
 		return subjectSendingMail;
 	}
-
-
-
-
 }

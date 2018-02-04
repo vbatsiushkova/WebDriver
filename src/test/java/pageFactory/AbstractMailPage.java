@@ -36,4 +36,12 @@ public class AbstractMailPage
 
 	@FindBy(css = "a[href*='mail/#inbox']")
 	protected WebElement inboxPage;
+
+	public void openPage() throws InterruptedException
+	{	}
+
+	public WebElement getMail() throws InterruptedException
+	{
+		return (WebElement) this;
+	}
 }

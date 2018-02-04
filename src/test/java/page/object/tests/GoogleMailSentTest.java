@@ -3,6 +3,7 @@ package page.object.tests;
 import com.sun.org.glassfish.gmbal.Description;
 import helpers.Account;
 import helpers.Browser;
+import helpers.BrowserType;
 import helpers.HelperMethods;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -10,6 +11,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.*;
 import pageFactory.*;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +24,6 @@ import static org.testng.Assert.assertTrue;
 public class GoogleMailSentTest
 {
 	public final String BASE_URL = "https://www.google.by";
-	Account account = new Account();
 
 	public static RemoteWebDriver driver;
 	//	static WebDriver driver;
@@ -33,44 +34,22 @@ public class GoogleMailSentTest
 	InboxPage inboxPage;
 	AccountInformationPopUp accountInformation;
 	HelperMethods randomStringGeneratot = new HelperMethods();
+	InboxPage promotinPage;
 
 	String address = randomStringGeneratot.generateString() + "@mail.ru";
 	String subject = randomStringGeneratot.generateString();
 	String body = randomStringGeneratot.generateString();
 
-//	@BeforeSuite
-//	public void runHubAndNodes() throws IOException
-//	{
-//		List<String> path = Browser.pathBatFileList();
-//		path.forEach(c->{
-//			try {
-//				String[] command = {c};
-//				Process p =  Runtime.getRuntime().exec(command);
-//			} catch (IOException ex) {
-//			}
-//		});
-//	}
+	@BeforeSuite
+	public void runHubAndNodes() throws IOException
+	{
+
+	}
 
 		@BeforeMethod
 		@Parameters({ "browser" })
-		public void precondition (@Optional(value = "chrome") String browser) throws MalformedURLException
+		public void precondition (@Optional(value = "CHROME") BrowserType browser) throws MalformedURLException
 		{
-//		System.setProperty("webdriver.chrome.driver", "d:\\Install\\WebDriver\\chromedriver.exe");
-//		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-//		MutableCapabilities chromeOptions = new ChromeOptions();
-//		MutableCapabilities firefoxOptions=new FirefoxOptions();
-//		chromeOptions.setCapability("platformName",Platform.WINDOWS);
-//
-//		try{
-//			driver = new RemoteWebDriver(new URL("http://localhost:4443/wd/hub"), chromeOptions);
-//		}catch(MalformedURLException e){
-//			e.printStackTrace();
-//		}
-//
-//		ChromeOptions options = new ChromeOptions();
-//		options.addArguments("start-maximized");
-			//driver = new ChromeDriver();
-
 			driver = Browser.getDriver(browser);
 			driver.manage().window().maximize();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -80,6 +59,7 @@ public class GoogleMailSentTest
 			sentPage = PageFactory.initElements(driver, SentPage.class);
 			inboxPage = PageFactory.initElements(driver, InboxPage.class);
 			accountInformation = PageFactory.initElements(driver, AccountInformationPopUp.class);
+			promotinPage = PageFactory.initElements(driver, PromotionTabPage.class);
 
 		}
 
@@ -89,9 +69,9 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(account.getUSERNAME1(),account.getPASSWORD());
+			loginPage.signIn(Account.USERNAME1,Account.PASSWORD);
 			String actualLoginName = accountInformation.checkUserAccount();
-			assertTrue(actualLoginName.contains(account.getUSERNAME1().toLowerCase()));
+			assertTrue(actualLoginName.contains(Account.USERNAME1.toLowerCase()));
 		}
 
 		@Test
@@ -100,13 +80,13 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
+			loginPage.signIn(Account.USERNAME1,Account.PASSWORD);
 			startPage.openMailPage();
 			mailPage.createDraftMail(address, subject, body);
-			mailPage.openDraftPage();
-			String createdMail = mailPage.getNewlyCreatedMailInDraft().getText();
+			mailPage.openPage();
+			String createdMail = mailPage.getMail().getText();
 			assertTrue(createdMail.contains(subject));
-			mailPage.getNewlyCreatedMailInDraft().click();
+			mailPage.getMail().click();
 			assertEquals(mailPage.actualAddress(), address);
 			assertEquals(mailPage.actualSubject(), subject);
 			assertEquals(mailPage.actualBody(), body);
@@ -118,10 +98,10 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(account.getUSERNAME1(),account.getPASSWORD());
+			loginPage.signIn(Account.USERNAME1,Account.PASSWORD);
 			startPage.openMailPage();
 			mailPage.createDraftMail(address, subject, body);
-			mailPage.openDraftPage();
+			mailPage.openPage();
 			int draftMailsBefore = mailPage.getCountDraftMails();
 			mailPage.sendDraftMail();
 			int draftMailAfter = mailPage.getCountDraftMails();
@@ -135,13 +115,13 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
+			loginPage.signIn(Account.USERNAME1,Account.PASSWORD);
 			startPage.openMailPage();
 			mailPage.createDraftMail(address, subject, body);
-			mailPage.openDraftPage();
+			mailPage.openPage();
 			mailPage.sendDraftMail();
-			sentPage.openSentPage();
-			sentPage.getFirstSentMail().click();
+			sentPage.openPage();
+			sentPage.getMail().click();
 			WebElement subjectSendingMailElement = sentPage.getsubjectSendingMail();
 			String subjectSendingMail = subjectSendingMailElement.getText();
 			assertEquals(subjectSendingMail, subject);
@@ -155,11 +135,11 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
+			loginPage.signIn(Account.USERNAME1,Account.PASSWORD);
 			startPage.openInboxMailPage();
 			String inboxMailPrimary = inboxPage.getBodyInboxMail();
 			inboxPage.openContextMenu();
-			inboxPage.openSocialTab();
+
 			String inboxMailSocial = inboxPage.getTheLastSocialMail();
 			assertEquals(inboxMailPrimary, inboxMailSocial);
 		}
@@ -170,11 +150,11 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
+			loginPage.signIn(Account.USERNAME1,Account.PASSWORD);
 			startPage.openInboxMailPage();
 			String inboxMailPrimary = inboxPage.getBodyInboxMail();
 			inboxPage.dragAnddropMailToPromotionsTab();
-			inboxPage.openPromotionsTab();
+			promotinPage.openPage();
 			String inboxMailPromotions = inboxPage.getTheLastSocialMail();
 			assertEquals(inboxMailPromotions, inboxMailPrimary);
 		}
@@ -185,7 +165,7 @@ public class GoogleMailSentTest
 		{
 			startPage.openSite(BASE_URL);
 			startPage.invokeSignIn();
-			loginPage.signIn(account.getUSERNAME1(), account.getPASSWORD());
+			loginPage.signIn(Account.USERNAME1,Account.PASSWORD);
 			accountInformation.logOut();
 			assertTrue(startPage.getloginButton().isDisplayed());
 		}

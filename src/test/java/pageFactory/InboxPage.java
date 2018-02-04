@@ -16,20 +16,20 @@ import java.util.List;
  */
 public class InboxPage extends AbstractMailPage
 {
+	WebDriver driver;
+
 	public InboxPage(WebDriver driver)
 	{
 		super(driver);
 	}
+
 	Actions action = new Actions(driver);
 
 	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf aE3']//span[@class='bog']")
 	WebElement inboxmail;
-
-	@FindBy(xpath = "//div[@aria-label='Social']")
-	WebElement socialTab;
-
 	@FindBy(xpath = "//div[@aria-label='Promotions']//div[contains(text(),'Promotions')]")
 	WebElement promotionsTab;
+
 
 	public String getBodyInboxMail(){
 		return inboxmail.getText();
@@ -41,7 +41,7 @@ public class InboxPage extends AbstractMailPage
 		return lastSocialElement.getText();
 	}
 
-	public WebElement getTheFirstPrimaryMail(){
+	public WebElement getMail(){
 		List<WebElement> allInboxMail = driver.findElements(By.xpath("//div[@class='BltHke nH oy8Mbf aE3']//span[@class='bog']"));
 		WebElement firstPrimaryElement = allInboxMail.get(0);
 		return firstPrimaryElement;
@@ -53,21 +53,14 @@ public class InboxPage extends AbstractMailPage
 		action.sendKeys(Keys.ENTER).build().perform();
 	}
 
-	public void openSocialTab(){
-		action.click(socialTab).build().perform();
+	@Override
+	public void openPage(){
+		inboxPage.click();
 	}
-
-	public void openPromotionsTab() throws InterruptedException
-	{
-		action.click(promotionsTab).build().perform();
-
-	}
-
 	public void dragAnddropMailToPromotionsTab() throws InterruptedException
 	{
-		String mailtext = getTheFirstPrimaryMail().getText();
-		Waiter.wait(driver,promotionsTab);
-        action.dragAndDrop(getTheFirstPrimaryMail(), promotionsTab).build().perform();
-		Waiter.waitElementIsAbsent(driver,inboxmail,mailtext );
+		String mailtext = getMail().getText();
+		Waiter.wait(driver, promotionsTab);
+		action.dragAndDrop(getMail(), promotionsTab).build().perform();
 	}
 }

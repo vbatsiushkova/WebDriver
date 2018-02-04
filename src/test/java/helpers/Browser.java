@@ -13,32 +13,34 @@ import java.net.URL;
  */
 public class Browser
 {
-	public static RemoteWebDriver getDriver(String browser) throws MalformedURLException
+	private static RemoteWebDriver driver;
+
+	private Browser(){}
+
+	public static RemoteWebDriver getDriver(BrowserType name) throws MalformedURLException
 	{
-		return new RemoteWebDriver(new URL("http://localhost:4442/wd/hub"), getBrowser(browser));
+		if (driver == null)
+		{
+			driver = new RemoteWebDriver(new URL("http://localhost:4442/wd/hub"), getBrowser(BrowserType.CHROME));
+		}
+	return driver;
 	}
 
-	private static MutableCapabilities getBrowser(String browserType)
+	private static MutableCapabilities getBrowser(BrowserType name)
 	{
-		switch (browserType)
+		switch (name)
 		{
-		case "firefox":
+		case FIREFOX:
 			FirefoxOptions firefoxDriver = new FirefoxOptions();
 			return firefoxDriver;
-		case "chrome":
+		case CHROME:
 			ChromeOptions chromeDriver = new ChromeOptions();
 			return chromeDriver;
 		default:
-			ChromeOptions driver = new ChromeOptions();
-			return driver;
+			ChromeOptions defaultDriver = new ChromeOptions();
+			return defaultDriver;
+
 		}
 	}
 
-//	public static List<String> pathBatFileList(){
-//		List<String> path = new ArrayList<String>();
-//		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\hub_3.8.1.bat");
-//		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\instalChromeNode.bat");
-//		path.add("d:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\ffdriver\\installFFNode.bat");
-//		return path;
-//	}
 }

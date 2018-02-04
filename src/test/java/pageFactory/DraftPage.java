@@ -47,8 +47,8 @@ public class DraftPage extends AbstractMailPage
 		Waiter.waitElementIsAbsent(driver,bodyField, body);
 
 	}
-
-	public void openDraftPage() throws InterruptedException
+	@Override
+	public void openPage() throws InterruptedException
 	{
 			draftPage.click();
 			Waiter.wait(driver,getNewlyCreatedMailInDraft);
@@ -97,8 +97,8 @@ public class DraftPage extends AbstractMailPage
 	}
 
 
-
-		public WebElement getNewlyCreatedMailInDraft(){
+	@Override
+		public WebElement getMail(){
 		return getNewlyCreatedMailInDraft;
 	}
 }
