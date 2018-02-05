@@ -7,9 +7,9 @@ import org.openqa.selenium.support.FindBy;
 /**
  * Created by Volha_Batsiushkova on 1/13/2018.
  */
-public class AbstractMailPage
+public abstract class AbstractMailPage
 {
-	WebDriver driver;
+	protected WebDriver driver;
 
 	public AbstractMailPage(WebDriver driver)
 	{
@@ -37,11 +37,8 @@ public class AbstractMailPage
 	@FindBy(css = "a[href*='mail/#inbox']")
 	protected WebElement inboxPage;
 
-	public void openPage() throws InterruptedException
-	{	}
+	public abstract void openPage() throws InterruptedException;
 
-	public WebElement getMail() throws InterruptedException
-	{
-		return (WebElement) this;
-	}
+	public abstract WebElement getMail() throws InterruptedException;
+
 }

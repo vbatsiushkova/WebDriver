@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class InboxPage extends AbstractMailPage
 {
-	WebDriver driver;
 
 	public InboxPage(WebDriver driver)
 	{
@@ -29,19 +28,23 @@ public class InboxPage extends AbstractMailPage
 	WebElement inboxmail;
 	@FindBy(xpath = "//div[@aria-label='Promotions']//div[contains(text(),'Promotions')]")
 	WebElement promotionsTab;
+	@FindBy(xpath = "//div[@aria-label='Social']")
+	WebElement socialTab;
 
-
-	public String getBodyInboxMail(){
+	public String getBodyInboxMail()
+	{
 		return inboxmail.getText();
 	}
 
-	public String getTheLastSocialMail(){
+	public String getTheLastSocialMail()
+	{
 		List<WebElement> allSocialMail = driver.findElements(By.xpath("//div[@class='BltHke nH oy8Mbf aE3']//span[@class='bog']"));
 		WebElement lastSocialElement = Iterables.getLast(allSocialMail);
 		return lastSocialElement.getText();
 	}
 
-	public WebElement getMail(){
+	public WebElement getMail()
+	{
 		List<WebElement> allInboxMail = driver.findElements(By.xpath("//div[@class='BltHke nH oy8Mbf aE3']//span[@class='bog']"));
 		WebElement firstPrimaryElement = allInboxMail.get(0);
 		return firstPrimaryElement;
@@ -54,13 +57,26 @@ public class InboxPage extends AbstractMailPage
 	}
 
 	@Override
-	public void openPage(){
+	public void openPage()
+	{
 		inboxPage.click();
 	}
+
 	public void dragAnddropMailToPromotionsTab() throws InterruptedException
 	{
 		String mailtext = getMail().getText();
 		Waiter.wait(driver, promotionsTab);
 		action.dragAndDrop(getMail(), promotionsTab).build().perform();
 	}
+
+	public void openPromotionTab()
+	{
+		action.click(promotionsTab).build().perform();
+	}
+
+	public void openSocialTab()
+	{
+		action.click(socialTab).build().perform();
+	}
+
 }

@@ -5,5 +5,5 @@ package helpers;
  */
 public enum BrowserType
 {
-		FIREFOX, IE, CHROME;
+		FIREFOX, IE, CHROME
 }

@@ -19,10 +19,8 @@ public class Browser
 
 	public static RemoteWebDriver getDriver(BrowserType name) throws MalformedURLException
 	{
-		if (driver == null)
-		{
-			driver = new RemoteWebDriver(new URL("http://localhost:4442/wd/hub"), getBrowser(BrowserType.CHROME));
-		}
+    driver = new RemoteWebDriver(new URL("http://localhost:4442/wd/hub"), getBrowser(name));
+	   
 	return driver;
 	}
 
@@ -39,7 +37,6 @@ public class Browser
 		default:
 			ChromeOptions defaultDriver = new ChromeOptions();
 			return defaultDriver;
-
 		}
 	}
 
