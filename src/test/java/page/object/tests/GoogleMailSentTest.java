@@ -24,11 +24,11 @@ import static org.testng.Assert.assertTrue;
  */
 public class GoogleMailSentTest
 {
-	public final String BASE_URL = "https://www.google.by";
+
 
 	public static WebDriver driver;
 	//	static WebDriver driver;
-	StartPage startPage;
+	AbstractMailPage startPage;
 	LoginPage loginPage;
 	DraftPage draftPage;
 	SentPage sentPage;
@@ -36,6 +36,7 @@ public class GoogleMailSentTest
 	AccountInformationPopUp accountInformation;
 	HelperMethods randomStringGeneratot = new HelperMethods();
 	InboxPage promotionPage;
+	FactoryPages pages= new FactoryPages();
 
 	String address = randomStringGeneratot.generateString() + "@mail.ru";
 	String subject = randomStringGeneratot.generateString();
@@ -59,7 +60,7 @@ public class GoogleMailSentTest
 		driver = Browser.getDriver(browserType);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		startPage = PageFactory.initElements(driver, StartPage.class);
+		startPage = pages.getPage("StartPage");
 		loginPage = PageFactory.initElements(driver, LoginPage.class);
 		draftPage = PageFactory.initElements(driver, DraftPage.class);
 		sentPage = PageFactory.initElements(driver, SentPage.class);
@@ -69,10 +70,10 @@ public class GoogleMailSentTest
 
 	@Test
 	@Description("Login to the MailBox ")
-	public void openLoginPage()
+	public void openLoginPage() throws InterruptedException
 	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
+		startPage.openPage();
+		startPage.invokeSignIn(); //нет доступа к методу
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		String actualLoginName = accountInformation.checkUserAccount();
 		assertTrue(actualLoginName.contains(Account.USERNAME1.toLowerCase()));
@@ -82,8 +83,8 @@ public class GoogleMailSentTest
 	@Description("Cretaed Mail is saved as draft")
 	public void cretedDraftMail() throws InterruptedException
 	{
-		startPage.openSite(BASE_URL);
-		startPage.invokeSignIn();
+		startPage.openPage();
+		startPage.invokeSignIn();  //нет доступа
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		startPage.openMailPage();
 		draftPage.createDraftMail(address, subject, body);
@@ -100,7 +101,7 @@ public class GoogleMailSentTest
 	@Description("Send the latest draft mail")
 	public void sendDraftMail() throws InterruptedException
 	{
-		startPage.openSite(BASE_URL);
+		startPage.openPage();
 		startPage.invokeSignIn();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		startPage.openMailPage();
@@ -117,7 +118,7 @@ public class GoogleMailSentTest
 	@Description("Send the latest draft mail")
 	public void mailIsSent() throws InterruptedException
 	{
-		startPage.openSite(BASE_URL);
+		startPage.openPage();
 		startPage.invokeSignIn();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		startPage.openMailPage();
@@ -135,9 +136,9 @@ public class GoogleMailSentTest
 
 	@Test
 	@Description("Move mail to social tab")
-	public void moveMailToSocialTab()
+	public void moveMailToSocialTab() throws InterruptedException
 	{
-		startPage.openSite(BASE_URL);
+		startPage.openPage();
 		startPage.invokeSignIn();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		startPage.openInboxMailPage();
@@ -152,7 +153,7 @@ public class GoogleMailSentTest
 	@Description("Move mail to promotions tab via drag and drop action")
 	public void moveMailToPromotionsTab() throws InterruptedException
 	{
-		startPage.openSite(BASE_URL);
+		startPage.openPage();
 		startPage.invokeSignIn();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		startPage.openInboxMailPage();
@@ -165,9 +166,9 @@ public class GoogleMailSentTest
 
 	@Test
 	@Description("log out")
-	public void logOut()
+	public void logOut() throws InterruptedException
 	{
-		startPage.openSite(BASE_URL);
+		startPage.openPage();
 		startPage.invokeSignIn();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		accountInformation.logOut();

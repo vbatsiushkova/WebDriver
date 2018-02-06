@@ -3,19 +3,19 @@ package pageFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 /**
  * Created by Volha_Batsiushkova on 11/24/2016.
  */
-public class StartPage
+public class StartPage  extends AbstractMailPage
 {
-
-	private WebDriver driver;
+	public final String BASE_URL = "https://www.google.by";
 
 	public StartPage(WebDriver driver)
 	{
-		this.driver = driver;
-
+		super(driver);
+		PageFactory.initElements(driver, StartPage.class);
 	}
 
 	@FindBy(xpath = "//*[@id='gb_70']")
@@ -24,10 +24,6 @@ public class StartPage
 	@FindBy(partialLinkText = "Gmail")
 	private WebElement mailPageLink;
 
-	public void openSite(String base_url)
-	{
-		driver.get(base_url);
-	}
 
 	public LoginPage invokeSignIn()
 	{
@@ -50,6 +46,18 @@ public class StartPage
 
 	public WebElement getloginButton(){
 		return loginButton;
+	}
+
+	@Override
+	public void openPage() throws InterruptedException
+	{
+		driver.get(BASE_URL);
+	}
+
+	@Override
+	public WebElement getMail() throws InterruptedException
+	{
+		return null;
 	}
 
 }
