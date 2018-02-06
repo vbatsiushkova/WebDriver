@@ -65,8 +65,6 @@ public class GoogleMailSentTest
 		sentPage = PageFactory.initElements(driver, SentPage.class);
 		inboxPage = PageFactory.initElements(driver, InboxPage.class);
 		accountInformation = PageFactory.initElements(driver, AccountInformationPopUp.class);
-		//promotionPage= new PromotionTabPage(driver, new InboxPage(driver));
-
 	}
 
 	@Test
