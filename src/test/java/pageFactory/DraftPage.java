@@ -9,14 +9,17 @@ import org.openqa.selenium.support.FindBy;
 /**
  * Created by Volha_Batsiushkova on 1/7/2018.
  */
-public class DraftPage extends AbstractMailPage
+public class DraftPage implements AbstractMailPage
 {
+	WebDriver driver;
+
 	public DraftPage(WebDriver driver)
 	{
-		super(driver);
+		this.driver = driver;
+		//PageFactory.initElements(driver, DraftPage.class);
 	}
 
-    @FindBy(xpath = "//div[@class='Am Al editable LW-avf']")
+	@FindBy(xpath = "//div[@class='Am Al editable LW-avf']")
 	private WebElement bodyField;
 
 	@FindBy(xpath = "//td[@class='Hm']/img[@class='Ha']")
@@ -44,14 +47,16 @@ public class DraftPage extends AbstractMailPage
 		bodyField.click();
 		bodyField.sendKeys(body);
 		closePopUpMail.click();
-		Waiter.waitElementIsAbsent(driver,bodyField, body);
+		Waiter.waitElementIsAbsent(driver, bodyField, body);
 
 	}
+
 	@Override
-	public void openPage() throws InterruptedException
+	public DraftPage openPage() throws InterruptedException
 	{
-			draftPage.click();
-			Waiter.wait(driver,getNewlyCreatedMailInDraft);
+		draftPage.click();
+		Waiter.wait(driver, getNewlyCreatedMailInDraft);
+		return this;
 	}
 
 	public String actualAddress() throws InterruptedException
@@ -73,14 +78,12 @@ public class DraftPage extends AbstractMailPage
 	public void sendDraftMail() throws InterruptedException
 	{
 		Waiter.wait(driver, getNewlyCreatedMailInDraft);
-		String draftMailText=getNewlyCreatedMailInDraft.getText();
+		String draftMailText = getNewlyCreatedMailInDraft.getText();
 		getNewlyCreatedMailInDraft.click();
 		Waiter.wait(driver, sendButton);
 		sendButton.click();
-		Waiter.waitElementIsAbsent(driver, getNewlyCreatedMailInDraft, draftMailText );
+		Waiter.waitElementIsAbsent(driver, getNewlyCreatedMailInDraft, draftMailText);
 	}
-
-
 
 	public int getCountDraftMails()
 	{
@@ -96,9 +99,9 @@ public class DraftPage extends AbstractMailPage
 		return value;
 	}
 
-
 	@Override
-		public WebElement getMail(){
+	public WebElement getMail()
+	{
 		return getNewlyCreatedMailInDraft;
 	}
 }

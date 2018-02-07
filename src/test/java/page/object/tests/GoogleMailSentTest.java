@@ -1,17 +1,12 @@
 package page.object.tests;
 
 import com.sun.org.glassfish.gmbal.Description;
-import helpers.Account;
-import helpers.Browser;
-import helpers.BrowserType;
-import helpers.HelperMethods;
-import org.openqa.selenium.WebDriver;
+import helpers.*;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.*;
 import pageFactory.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
@@ -26,17 +21,15 @@ public class GoogleMailSentTest
 {
 
 
-	public static WebDriver driver;
+	public static RemoteWebDriver driver;
 	//	static WebDriver driver;
-	AbstractMailPage startPage;
+	StartPage startPage;
 	LoginPage loginPage;
 	DraftPage draftPage;
 	SentPage sentPage;
 	InboxPage inboxPage;
 	AccountInformationPopUp accountInformation;
 	HelperMethods randomStringGeneratot = new HelperMethods();
-	InboxPage promotionPage;
-	FactoryPages pages= new FactoryPages();
 
 	String address = randomStringGeneratot.generateString() + "@mail.ru";
 	String subject = randomStringGeneratot.generateString();
@@ -45,11 +38,11 @@ public class GoogleMailSentTest
 	@BeforeSuite
 	public void runHubAndNodes() throws IOException, InterruptedException
 	{
-		ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "RunGrid.bat");
-		File dir = new File("D:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\src\\test\\java\\resources\\");
-		pb.directory(dir);
-		Process p = pb.start();
-		Thread.sleep(1000);
+//		ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "RunGrid.bat");
+//		File dir = new File("D:\\!!!!MY_ Importent\\cdp\\WebDriver\\WebDriver\\src\\test\\java\\resources\\");
+//		pb.directory(dir);
+//		Process p = pb.start();
+//		Thread.sleep(1000);
 
 	}
 
@@ -60,12 +53,12 @@ public class GoogleMailSentTest
 		driver = Browser.getDriver(browserType);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		startPage = pages.getPage("StartPage");
-		loginPage = PageFactory.initElements(driver, LoginPage.class);
-		draftPage = PageFactory.initElements(driver, DraftPage.class);
-		sentPage = PageFactory.initElements(driver, SentPage.class);
-		inboxPage = PageFactory.initElements(driver, InboxPage.class);
-		accountInformation = PageFactory.initElements(driver, AccountInformationPopUp.class);
+		startPage = (StartPage) FactoryPages.getPage(Page.START_PAGE, driver);
+		loginPage = (LoginPage) FactoryPages.getPage(Page.LOGIN_PAGE, driver);
+        draftPage = (DraftPage) FactoryPages.getPage(Page.DRAFT_PAGE, driver);
+		sentPage = (SentPage) FactoryPages.getPage(Page.SENT_PAGE, driver);
+		inboxPage = (InboxPage) FactoryPages.getPage(Page.INBOX_PAGE, driver);
+		accountInformation = (AccountInformationPopUp) FactoryPages.getPage(Page.ACCOUNT_POP_UP, driver);
 	}
 
 	@Test
@@ -73,7 +66,7 @@ public class GoogleMailSentTest
 	public void openLoginPage() throws InterruptedException
 	{
 		startPage.openPage();
-		startPage.invokeSignIn(); //нет доступа к методу
+		loginPage.openPage();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		String actualLoginName = accountInformation.checkUserAccount();
 		assertTrue(actualLoginName.contains(Account.USERNAME1.toLowerCase()));
@@ -84,9 +77,9 @@ public class GoogleMailSentTest
 	public void cretedDraftMail() throws InterruptedException
 	{
 		startPage.openPage();
-		startPage.invokeSignIn();  //нет доступа
+		loginPage.openPage();  //нет доступа
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
-		startPage.openMailPage();
+		startPage.openInboxMailPage();
 		draftPage.createDraftMail(address, subject, body);
 		draftPage.openPage();
 		String createdMail = draftPage.getMail().getText();
@@ -102,9 +95,9 @@ public class GoogleMailSentTest
 	public void sendDraftMail() throws InterruptedException
 	{
 		startPage.openPage();
-		startPage.invokeSignIn();
+		loginPage.openPage();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
-		startPage.openMailPage();
+		startPage.openInboxMailPage();
 		draftPage.createDraftMail(address, subject, body);
 		draftPage.openPage();
 		int draftMailsBefore = draftPage.getCountDraftMails();
@@ -119,9 +112,9 @@ public class GoogleMailSentTest
 	public void mailIsSent() throws InterruptedException
 	{
 		startPage.openPage();
-		startPage.invokeSignIn();
+		loginPage.openPage();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
-		startPage.openMailPage();
+		startPage.openInboxMailPage();
 		draftPage.createDraftMail(address, subject, body);
 		draftPage.openPage();
 		draftPage.sendDraftMail();
@@ -139,7 +132,7 @@ public class GoogleMailSentTest
 	public void moveMailToSocialTab() throws InterruptedException
 	{
 		startPage.openPage();
-		startPage.invokeSignIn();
+		loginPage.openPage();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		startPage.openInboxMailPage();
 		String inboxMailPrimary = inboxPage.getBodyInboxMail();
@@ -154,7 +147,7 @@ public class GoogleMailSentTest
 	public void moveMailToPromotionsTab() throws InterruptedException
 	{
 		startPage.openPage();
-		startPage.invokeSignIn();
+		loginPage.openPage();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		startPage.openInboxMailPage();
 		String inboxMailPrimary = inboxPage.getBodyInboxMail();
@@ -169,7 +162,7 @@ public class GoogleMailSentTest
 	public void logOut() throws InterruptedException
 	{
 		startPage.openPage();
-		startPage.invokeSignIn();
+		loginPage.openPage();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		accountInformation.logOut();
 		assertTrue(startPage.getloginButton().isDisplayed());

@@ -1,21 +1,22 @@
 package pageFactory;
 
+import helpers.Page;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 /**
  * Created by Volha_Batsiushkova on 11/24/2016.
  */
-public class StartPage  extends AbstractMailPage
+public class StartPage  implements AbstractMailPage
 {
-	public final String BASE_URL = "https://www.google.by";
+	public static final String BASE_URL = "https://www.google.by";
+	WebDriver driver;
 
 	public StartPage(WebDriver driver)
 	{
-		super(driver);
-		PageFactory.initElements(driver, StartPage.class);
+		this.driver = driver;
+		//PageFactory.initElements(driver, StartPage.class);
 	}
 
 	@FindBy(xpath = "//*[@id='gb_70']")
@@ -25,23 +26,23 @@ public class StartPage  extends AbstractMailPage
 	private WebElement mailPageLink;
 
 
-	public LoginPage invokeSignIn()
-	{
-		loginButton.click();
-		return new LoginPage(driver);
-	}
+//	public LoginPage invokeSignIn()
+//	{
+//		loginButton.click();
+//		return new LoginPage(driver);
+//	}
 
-	public DraftPage openMailPage()
-	{
-
-		mailPageLink.click();
-		return new DraftPage(driver);
-	}
+//	public DraftPage openMailPage()
+//	{
+//
+//		mailPageLink.click();
+//		return new DraftPage(driver);
+//	}
 
 	public InboxPage openInboxMailPage()
 	{
         mailPageLink.click();
-		return new InboxPage(driver);
+		return (InboxPage) FactoryPages.getPage(Page.INBOX_PAGE, driver);
 	}
 
 	public WebElement getloginButton(){
@@ -49,9 +50,10 @@ public class StartPage  extends AbstractMailPage
 	}
 
 	@Override
-	public void openPage() throws InterruptedException
+	public StartPage openPage() throws InterruptedException
 	{
 		driver.get(BASE_URL);
+		return this;
 	}
 
 	@Override

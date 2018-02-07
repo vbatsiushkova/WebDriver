@@ -1,44 +1,39 @@
 package pageFactory;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 /**
  * Created by Volha_Batsiushkova on 1/13/2018.
  */
-public abstract class AbstractMailPage
+public interface AbstractMailPage
 {
-	protected WebDriver driver;
-
-	public AbstractMailPage(WebDriver driver)
-	{
-		this.driver = driver;
-	}
+	//WebDriver driver = null;
 
 	@FindBy(xpath = "//*[@id=':i']/span[text()='Gmail']")
-	protected WebElement gmailPageLabel;
+	WebElement gmailPageLabel = null;
 
 	@FindBy(className = "z0")
-	protected WebElement openMailPopUp;
+	 WebElement openMailPopUp = null;
 
 	@FindBy(name = "to")
-	protected WebElement addressField;
+	 WebElement addressField= null;
 
 	@FindBy(name = "subjectbox")
-	protected WebElement subjectField;
+	 WebElement subjectField= null;
 
 	@FindBy(css = "a[href*='mail/#drafts']")
-	protected WebElement draftPage;
+	 WebElement draftPage= null;
 
 	@FindBy(css = "a[href*='mail/#sent']")
-	protected WebElement sentPage;
+	 WebElement sentPage= null;
 
 	@FindBy(css = "a[href*='mail/#inbox']")
-	protected WebElement inboxPage;
+	 WebElement inboxPage= null;
 
-	public abstract void openPage() throws InterruptedException;
+	AbstractMailPage openPage() throws InterruptedException;
 
-	public abstract WebElement getMail() throws InterruptedException;
+	WebElement getMail() throws InterruptedException;
+
 
 }

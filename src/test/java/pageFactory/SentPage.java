@@ -13,11 +13,13 @@ import java.util.List;
 /**
  * Created by Volha_Batsiushkova on 1/13/2018.
  */
-public class SentPage extends AbstractMailPage
+public class SentPage implements AbstractMailPage
 {
+	WebDriver driver;
 	public SentPage(WebDriver driver)
 	{
-		super(driver);
+		this.driver=driver;
+		//PageFactory.initElements(driver, SentPage.class);
 	}
 
 	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf' and @role='main']//tr//*[@role='checkbox']")
@@ -33,11 +35,11 @@ public class SentPage extends AbstractMailPage
 	private WebElement okButton;
 
 	@Override
-	public void openPage() throws InterruptedException
+	public SentPage openPage() throws InterruptedException
 	{
 		sentPage.click();
 		Thread.sleep(500);
-
+		return this;
 	}
 
 	public WebElement getMail() throws InterruptedException

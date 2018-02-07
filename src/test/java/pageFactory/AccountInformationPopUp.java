@@ -8,13 +8,14 @@ import org.openqa.selenium.support.FindBy;
 /**
  * Created by Volha_Batsiushkova on 1/5/2018.
  */
-public class AccountInformationPopUp
+public class AccountInformationPopUp  implements AbstractMailPage
 {
 	private WebDriver driver;
 
 	public AccountInformationPopUp(WebDriver driver)
 	{
 		this.driver = driver;
+		//PageFactory.initElements(driver, AccountInformationPopUp.class);
 	}
 
 	@FindBy(xpath = "//div[@aria-label='Account Information']//div[contains(text(),'@gmail.com')]")
@@ -29,10 +30,9 @@ public class AccountInformationPopUp
 	@FindBy(name = "q")
 	private WebElement searchField;
 
-	public String checkUserAccount()
+	public String checkUserAccount() throws InterruptedException
 	{
-		Waiter.wait(driver, searchField);
-		popUpAccount.click();
+		openPage();
 		Waiter.wait(driver, findEmailInPopUpWindow);
 		return findEmailInPopUpWindow.getText();
 	}
@@ -46,5 +46,18 @@ public class AccountInformationPopUp
 
 	}
 
+	@Override
+	public AccountInformationPopUp openPage() throws InterruptedException
+	{
+		Waiter.wait(driver, searchField);
+		popUpAccount.click();
+		return this;
+	}
+
+	@Override
+	public WebElement getMail() throws InterruptedException
+	{
+		return null;
+	}
 }
 

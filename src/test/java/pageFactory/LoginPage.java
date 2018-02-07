@@ -8,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 /**
  * Created by Volha_Batsiushkova on 11/24/2016.
  */
-public class LoginPage
+public class LoginPage implements AbstractMailPage
 {
 
 	private WebDriver driver;
@@ -16,7 +16,11 @@ public class LoginPage
 	public LoginPage(WebDriver driver)
 	{
 		this.driver = driver;
+		//PageFactory.initElements(driver, LoginPage.class);
 	}
+	@FindBy(xpath = "//*[@id='gb_70']")
+	private WebElement loginButton;
+
 
 	@FindBy(id = "identifierId")
 	private WebElement inputEmail;
@@ -38,4 +42,17 @@ public class LoginPage
 		return new StartPage(driver);
 	}
 
+	@Override
+	public LoginPage openPage() throws InterruptedException
+	{
+		loginButton.click();
+		return this;
+	}
+
+
+	@Override
+	public WebElement getMail() throws InterruptedException
+	{
+		return null;
+	}
 }

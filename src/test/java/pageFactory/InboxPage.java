@@ -14,12 +14,14 @@ import java.util.List;
 /**
  * Created by Volha_Batsiushkova on 1/23/2018.
  */
-public class InboxPage extends AbstractMailPage
+public class InboxPage implements AbstractMailPage
 {
+	WebDriver driver;
 
 	public InboxPage(WebDriver driver)
 	{
-		super(driver);
+		this.driver = driver;
+		//PageFactory.initElements(driver, InboxPage.class);
 	}
 
 	Actions action = new Actions(driver);
@@ -57,9 +59,10 @@ public class InboxPage extends AbstractMailPage
 	}
 
 	@Override
-	public void openPage()
+	public InboxPage openPage()
 	{
 		inboxPage.click();
+		return this;
 	}
 
 	public void dragAnddropMailToPromotionsTab() throws InterruptedException
