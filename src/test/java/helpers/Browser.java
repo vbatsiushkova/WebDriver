@@ -1,43 +1,36 @@
 package helpers;
 
-import org.openqa.selenium.MutableCapabilities;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
  * Created by Volha_Batsiushkova on 1/25/2018.
  */
 public class Browser
 {
-	private static RemoteWebDriver driver;
+	private static WebDriver driver;
 
 	private Browser(){}
 
-	public static RemoteWebDriver getDriver(BrowserType name) throws MalformedURLException
-	{
-    driver = new RemoteWebDriver(new URL("http://localhost:4442/wd/hub"), getBrowser(name));
-	   
-	return driver;
-	}
 
-	private static MutableCapabilities getBrowser(BrowserType name)
+	public static WebDriver getBrowser(BrowserType name)
 	{
 		switch (name)
 		{
 		case FIREFOX:
-			FirefoxOptions firefoxDriver = new FirefoxOptions();
-			return firefoxDriver;
+			driver = new FirefoxDriver();
+			break;
 		case CHROME:
-			ChromeOptions chromeDriver = new ChromeOptions();
-			return chromeDriver;
+			System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+			driver = new ChromeDriver();
+			break;
 		default:
-			ChromeOptions defaultDriver = new ChromeOptions();
-			return defaultDriver;
+			System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+			driver = new ChromeDriver();
+			break;
 		}
+		return driver;
 	}
 
 }

@@ -1,6 +1,7 @@
 package pageFactory;
 
 import com.google.common.collect.Iterables;
+import helpers.Page;
 import helpers.Waiter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -8,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class InboxPage extends AbstractMailPage
 	public InboxPage(WebDriver driver)
 	{
 		super(driver);
+		PageFactory.initElements(driver, this);
 	}
 
 	Actions action = new Actions(driver);
@@ -57,9 +60,10 @@ public class InboxPage extends AbstractMailPage
 	}
 
 	@Override
-	public void openPage()
+	public AbstractMailPage openPage()
 	{
 		inboxPage.click();
+		return page.createPage(Page.INBOX_PAGE, driver);
 	}
 
 	public void dragAnddropMailToPromotionsTab() throws InterruptedException
@@ -78,5 +82,18 @@ public class InboxPage extends AbstractMailPage
 	{
 		action.click(socialTab).build().perform();
 	}
+
+	public void createDraftMail(String address, String subject, String body)
+	{
+		Waiter.wait(driver, gmailPageLabel);
+		openMailPopUp.click();
+		Waiter.wait(driver, addressField);
+		addressField.sendKeys(address);
+		subjectField.sendKeys(subject);
+		bodyField.click();
+		bodyField.sendKeys(body);
+		closePopUpMail.click();
+		Waiter.waitElementIsAbsent(driver,bodyField, body);
+    }
 
 }

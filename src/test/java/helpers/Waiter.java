@@ -22,6 +22,8 @@ public class Waiter
 		new WebDriverWait(driver, 40).until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(webElement, text)));
 	}
 
+
+
 	public static void waitAlert(WebDriver driver){
 		new WebDriverWait(driver, 40).until(ExpectedConditions.alertIsPresent());
 	}

@@ -37,8 +37,28 @@ public abstract class AbstractMailPage
 	@FindBy(css = "a[href*='mail/#inbox']")
 	protected WebElement inboxPage;
 
-	public abstract void openPage() throws InterruptedException;
+	@FindBy(xpath = "//div[@class='Am Al editable LW-avf']")
+	protected WebElement bodyField;
+
+	@FindBy(xpath = "//td[@class='Hm']/img[@class='Ha']")
+	protected WebElement closePopUpMail;
+
+	@FindBy(xpath = "//div[@class = 'aoD hl']")
+	protected WebElement draftAddressEmail;
+
+	@FindBy(xpath = "//input[@name='subject']")
+	protected WebElement draftSubject;
+
+	@FindBy(xpath = "//td[@class='gU Up']")
+	protected WebElement sendButton;
+
+	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf']//tr//*[@class='bog']")
+	protected WebElement getNewlyCreatedMailInDraft;
+
+	PageGenerator page = new PageGenerator();
+
+	public abstract AbstractMailPage openPage() throws InterruptedException;
 
 	public abstract WebElement getMail() throws InterruptedException;
 
-}
+ }

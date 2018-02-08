@@ -1,5 +1,6 @@
 package pageFactory;
 
+import helpers.Page;
 import helpers.Waiter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -7,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class SentPage extends AbstractMailPage
 	public SentPage(WebDriver driver)
 	{
 		super(driver);
+		PageFactory.initElements(driver, this);
 	}
 
 	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf' and @role='main']//tr//*[@role='checkbox']")
@@ -33,11 +36,11 @@ public class SentPage extends AbstractMailPage
 	private WebElement okButton;
 
 	@Override
-	public void openPage() throws InterruptedException
+	public AbstractMailPage openPage() throws InterruptedException
 	{
 		sentPage.click();
 		Thread.sleep(500);
-
+        return page.createPage(Page.SENT_PAGE, driver);
 	}
 
 	public WebElement getMail() throws InterruptedException

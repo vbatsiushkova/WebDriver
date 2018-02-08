@@ -1,10 +1,11 @@
 package pageFactory;
 
 import helpers.HelperMethods;
+import helpers.Page;
 import helpers.Waiter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 /**
  * Created by Volha_Batsiushkova on 1/7/2018.
@@ -14,44 +15,15 @@ public class DraftPage extends AbstractMailPage
 	public DraftPage(WebDriver driver)
 	{
 		super(driver);
+		PageFactory.initElements(driver, this);
 	}
 
-    @FindBy(xpath = "//div[@class='Am Al editable LW-avf']")
-	private WebElement bodyField;
-
-	@FindBy(xpath = "//td[@class='Hm']/img[@class='Ha']")
-	private WebElement closePopUpMail;
-
-	@FindBy(xpath = "//div[@class = 'aoD hl']")
-	private WebElement draftAddressEmail;
-
-	@FindBy(xpath = "//input[@name='subject']")
-	private WebElement draftSubject;
-
-	@FindBy(xpath = "//td[@class='gU Up']")
-	private WebElement sendButton;
-
-	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf']//tr//*[@class='bog']")
-	private WebElement getNewlyCreatedMailInDraft;
-
-	public void createDraftMail(String address, String subject, String body)
-	{
-		Waiter.wait(driver, gmailPageLabel);
-		openMailPopUp.click();
-		Waiter.wait(driver, addressField);
-		addressField.sendKeys(address);
-		subjectField.sendKeys(subject);
-		bodyField.click();
-		bodyField.sendKeys(body);
-		closePopUpMail.click();
-		Waiter.waitElementIsAbsent(driver,bodyField, body);
-
-	}
 	@Override
-	public void openPage() throws InterruptedException
+	public AbstractMailPage openPage() throws InterruptedException
 	{
-			draftPage.click();
-			Waiter.wait(driver,getNewlyCreatedMailInDraft);
+		draftPage.click();
+		Waiter.wait(driver, getNewlyCreatedMailInDraft);
+		return page.createPage(Page.DRAFT_PAGE,driver);
 	}
 
 	public String actualAddress() throws InterruptedException
@@ -73,14 +45,12 @@ public class DraftPage extends AbstractMailPage
 	public void sendDraftMail() throws InterruptedException
 	{
 		Waiter.wait(driver, getNewlyCreatedMailInDraft);
-		String draftMailText=getNewlyCreatedMailInDraft.getText();
+		String draftMailText = getNewlyCreatedMailInDraft.getText();
 		getNewlyCreatedMailInDraft.click();
 		Waiter.wait(driver, sendButton);
 		sendButton.click();
-		Waiter.waitElementIsAbsent(driver, getNewlyCreatedMailInDraft, draftMailText );
+		Waiter.waitElementIsAbsent(driver, getNewlyCreatedMailInDraft, draftMailText);
 	}
-
-
 
 	public int getCountDraftMails()
 	{
@@ -96,11 +66,14 @@ public class DraftPage extends AbstractMailPage
 		return value;
 	}
 
-
 	@Override
-		public WebElement getMail(){
+	public WebElement getMail()
+	{
+		
 		return getNewlyCreatedMailInDraft;
 	}
+
+
 }
 
 
