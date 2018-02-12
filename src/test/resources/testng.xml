@@ -4,13 +4,13 @@
     <test name="Grid firefox Test">
         <parameter name="browser" value="FIREFOX"/>
         <classes>
-            <class name="page.object.tests.GoogleMailSentTest"/>
+            <class name="com.epam.run.tests.GoogleMailSentTest"/>
         </classes>
     </test>
     <test name="Grid chrome Test">
         <parameter name="browser" value="CHROME"/>
         <classes>
-            <class name="page.object.tests.GoogleMailSentTest"/>
+            <class name="com.epam.run.tests.GoogleMailSentTest"/>
         </classes>
     </test>
 </suite>
