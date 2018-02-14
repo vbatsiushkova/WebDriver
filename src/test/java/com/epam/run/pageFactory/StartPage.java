@@ -28,7 +28,7 @@ public class StartPage extends AbstractMailPage
 	public AbstractMailPage openPage() throws InterruptedException
 	{
 		driver.get(BASE_URL);
-		return this;
+		return new StartPage(driver);
 	}
 
 	@Override
@@ -43,8 +43,9 @@ public class StartPage extends AbstractMailPage
 		return page.createPage(Page.INBOX_PAGE, driver);
 	}
 
-	public WebElement getloginButton(){
-		return  loginButton;
+	public WebElement getloginButton()
+	{
+		return loginButton;
 	}
 
 }

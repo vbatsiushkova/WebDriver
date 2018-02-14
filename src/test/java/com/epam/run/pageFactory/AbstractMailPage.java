@@ -28,7 +28,7 @@ public abstract class AbstractMailPage
 	@FindBy(name = "subjectbox")
 	protected WebElement subjectField;
 
-	@FindBy(css = "a[href*='mail/#drafts']")
+	@FindBy(css = "a[href*='#draft']")
 	protected WebElement draftPage;
 
 	@FindBy(css = "a[href*='mail/#sent']")

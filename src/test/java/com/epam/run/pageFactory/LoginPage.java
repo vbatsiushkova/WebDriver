@@ -10,7 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 /**
  * Created by Volha_Batsiushkova on 11/24/2016.
  */
-public class LoginPage   extends AbstractMailPage
+public class LoginPage extends AbstractMailPage
 {
 	public LoginPage(WebDriver driver)
 	{
@@ -34,7 +34,7 @@ public class LoginPage   extends AbstractMailPage
 	@Override
 	public AbstractMailPage openPage() throws InterruptedException
 	{
-        loginButton.click();
+		loginButton.click();
 		return page.createPage(Page.LOGIN_PAGE, driver);
 	}
 

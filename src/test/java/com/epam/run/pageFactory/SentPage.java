@@ -40,7 +40,7 @@ public class SentPage extends AbstractMailPage
 	{
 		sentPage.click();
 		Thread.sleep(500);
-        return page.createPage(Page.SENT_PAGE, driver);
+		return page.createPage(Page.SENT_PAGE, driver);
 	}
 
 	public WebElement getMail() throws InterruptedException
