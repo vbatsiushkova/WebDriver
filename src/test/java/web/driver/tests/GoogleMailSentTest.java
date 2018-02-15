@@ -1,11 +1,11 @@
-package page.object.tests;
+package web.driver.tests;
 
 import com.sun.org.glassfish.gmbal.Description;
-import helpers.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
-import pageFactory.*;
+import web.driver.helpers.*;
+import web.driver.pageFactory.*;
 
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;

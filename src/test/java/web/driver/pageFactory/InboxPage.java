@@ -1,8 +1,8 @@
-package pageFactory;
+package web.driver.pageFactory;
 
 import com.google.common.collect.Iterables;
-import helpers.Page;
-import helpers.Waiter;
+import web.driver.helpers.Page;
+import web.driver.helpers.Waiter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;

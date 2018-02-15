@@ -1,8 +1,8 @@
-package pageFactory;
+package web.driver.pageFactory;
 
-import helpers.HelperMethods;
-import helpers.Page;
-import helpers.Waiter;
+import web.driver.helpers.HelperMethods;
+import web.driver.helpers.Page;
+import web.driver.helpers.Waiter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;

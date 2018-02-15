@@ -1,6 +1,6 @@
-package pageFactory;
+package web.driver.pageFactory;
 
-import helpers.Waiter;
+import web.driver.helpers.Waiter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

@@ -1,4 +1,4 @@
-package helpers;
+package web.driver.helpers;
 
 import java.util.Random;
 import java.util.regex.Matcher;

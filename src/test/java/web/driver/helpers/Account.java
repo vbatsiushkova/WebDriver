@@ -1,4 +1,4 @@
-package helpers;
+package web.driver.helpers;
 
 /**
  * Created by Volha_Batsiushkova on 1/28/2018.
