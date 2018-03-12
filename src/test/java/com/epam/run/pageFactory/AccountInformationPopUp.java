@@ -27,7 +27,7 @@ public class AccountInformationPopUp  extends AbstractMailPage
 	@FindBy(xpath = "//div[@aria-label='Account Information']//div[contains(text(),'@gmail.com')]")
 	private WebElement findEmailInPopUpWindow;
 
-	@FindBy(xpath = "//span[@class='gb_ab gbii']")
+	@FindBy(css = "a[href*='https://accounts.google.com']")
 	private WebElement popUpAccount;
 
 	@FindBy(css = "a[href*='Logout']")

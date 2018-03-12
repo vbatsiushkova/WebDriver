@@ -25,8 +25,11 @@ public class LoginPage extends AbstractMailPage
 	@FindBy(id = "identifierId")
 	private WebElement inputEmail;
 
-	@FindBy(xpath = "//content[@class='CwaK9']/span[@class='RveJvd snByac']")
-	private WebElement nextButton;
+	@FindBy(id = "identifierNext")
+	private WebElement identifierNextButton;
+
+	@FindBy(id = "passwordNext")
+	private WebElement passwordNextButton;
 
 	@FindBy(name = "password")
 	private WebElement inputPassword;
@@ -47,11 +50,11 @@ public class LoginPage extends AbstractMailPage
 	public AbstractMailPage signIn(String username, String password)
 	{
 		inputEmail.sendKeys(username);
-		nextButton.click();
+		identifierNextButton.click();
 		Waiter.wait(driver, inputPassword);
 		inputPassword.sendKeys(password);
-		Waiter.wait(driver, nextButton);
-		nextButton.click();
+		Waiter.wait(driver, passwordNextButton);
+		passwordNextButton.click();
 		return page.createPage(Page.START_PAGE, driver);
 	}
 
