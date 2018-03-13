@@ -1,6 +1,8 @@
 package com.epam.run.pageFactory;
 
+import com.epam.run.helpers.HelperMethods;
 import com.epam.run.helpers.Waiter;
+import com.epam.run.reporting.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -36,25 +38,32 @@ public class AccountInformationPopUp  extends AbstractMailPage
 	@FindBy(name = "q")
 	private WebElement searchField;
 
-	public String checkUserAccount()
+	HelperMethods helper= new HelperMethods();
+	public String checkUserAccount() throws InterruptedException
 	{
 		Waiter.wait(driver, findEmailInPopUpWindow);
+		helper.isElementPresent(findEmailInPopUpWindow);
 		return findEmailInPopUpWindow.getText();
 	}
 
-	public void logOut()
+	public void logOut() throws InterruptedException
 	{
 		Waiter.wait(driver,searchField);
+		helper.isElementPresent(popUpAccount);
 		popUpAccount.click();
+		Log.info("Pop-up window is displayed");
 		Waiter.wait(driver, logOutButton);
 		logOutButton.click();
+		Log.info("User Logout successfully");
 	}
 
 	@Override
 	public AbstractMailPage openPage() throws InterruptedException
 	{
 		Waiter.wait(driver, searchField);
+		Log.info("Pop-up window is displayed");
 		popUpAccount.click();
+		Log.info("Pop-up opens successfully");
 		return this;
 	}
 

@@ -2,6 +2,7 @@ package com.epam.run.pageFactory;
 
 import com.epam.run.helpers.Page;
 import com.epam.run.helpers.Waiter;
+import com.epam.run.reporting.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -38,6 +39,7 @@ public class LoginPage extends AbstractMailPage
 	public AbstractMailPage openPage() throws InterruptedException
 	{
 		loginButton.click();
+		Log.info("Loging page is opened");
 		return page.createPage(Page.LOGIN_PAGE, driver);
 	}
 
@@ -49,12 +51,17 @@ public class LoginPage extends AbstractMailPage
 
 	public AbstractMailPage signIn(String username, String password)
 	{
+		Log.info("Enter username " + username);
 		inputEmail.sendKeys(username);
+		Log.info("Press 'Next' button ");
 		identifierNextButton.click();
 		Waiter.wait(driver, inputPassword);
+		Log.info("Enter password");
 		inputPassword.sendKeys(password);
 		Waiter.wait(driver, passwordNextButton);
+		Log.info("Press 'Next' button ");
 		passwordNextButton.click();
+		
 		return page.createPage(Page.START_PAGE, driver);
 	}
 

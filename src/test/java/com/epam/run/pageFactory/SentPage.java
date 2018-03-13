@@ -1,5 +1,6 @@
 package com.epam.run.pageFactory;
 
+import com.epam.run.helpers.HelperMethods;
 import com.epam.run.helpers.Page;
 import com.epam.run.helpers.Waiter;
 import org.openqa.selenium.By;
@@ -22,6 +23,8 @@ public class SentPage extends AbstractMailPage
 		super(driver);
 		PageFactory.initElements(driver, this);
 	}
+
+	HelperMethods helper = new HelperMethods();
 
 	@FindBy(xpath = "//div[@class='BltHke nH oy8Mbf' and @role='main']//tr//*[@role='checkbox']")
 	private WebElement checkbox;
@@ -62,8 +65,9 @@ public class SentPage extends AbstractMailPage
 		driver.switchTo().alert().accept();
 	}
 
-	public WebElement getsubjectSendingMail()
+	public WebElement getsubjectSendingMail() throws InterruptedException
 	{
+		helper.isElementPresent(subjectSendingMail);
 		return subjectSendingMail;
 	}
 }

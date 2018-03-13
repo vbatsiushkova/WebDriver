@@ -1,6 +1,7 @@
 package com.epam.run.pageFactory;
 
 import com.epam.run.helpers.Page;
+import com.epam.run.reporting.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -28,6 +29,7 @@ public class StartPage extends AbstractMailPage
 	public AbstractMailPage openPage() throws InterruptedException
 	{
 		driver.get(BASE_URL);
+		Log.info("Start Page is opened");
 		return new StartPage(driver);
 	}
 
@@ -40,6 +42,7 @@ public class StartPage extends AbstractMailPage
 	public AbstractMailPage openInboxMailPageFromStartPage()
 	{
 		mailPageLink.click();
+		Log.info("MailPage is opened");
 		return page.createPage(Page.INBOX_PAGE, driver);
 	}
 
