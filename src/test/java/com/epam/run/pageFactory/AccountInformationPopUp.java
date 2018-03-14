@@ -41,7 +41,7 @@ public class AccountInformationPopUp  extends AbstractMailPage
 	HelperMethods helper= new HelperMethods();
 	public String checkUserAccount() throws InterruptedException
 	{
-		Waiter.wait(driver, findEmailInPopUpWindow);
+		//Waiter.wait(driver, findEmailInPopUpWindow);
 		helper.isElementPresent(findEmailInPopUpWindow);
 		return findEmailInPopUpWindow.getText();
 	}

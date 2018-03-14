@@ -2,7 +2,9 @@ package com.epam.run.tests;
 
 import com.epam.run.helpers.*;
 import com.epam.run.pageFactory.*;
+import com.epam.run.reporting.Log;
 import com.sun.org.glassfish.gmbal.Description;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
@@ -48,6 +50,7 @@ public class GoogleMailSentTest
 		sentPage = (SentPage) page.createPage(Page.SENT_PAGE, driver);
 		inboxPage = (InboxPage) page.createPage(Page.INBOX_PAGE, driver);
 		accountInformation = (AccountInformationPopUp) page.createPage(Page.ACCOUNT_POP_UP, driver);
+		
 	}
 
 	@Test
@@ -59,7 +62,13 @@ public class GoogleMailSentTest
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		accountInformation.openPage();
 		String actualLoginName = accountInformation.checkUserAccount();
-		assertTrue(actualLoginName.contains(Account.USERNAME1.toLowerCase()));
+		try{
+			assertTrue(actualLoginName.contains(Account.USERNAME1.toLowerCase()));
+		}
+		catch(AssertionError e){
+			Log.error(e.getMessage());
+			Assert.fail();
+		}
 	}
 
 	@Test
@@ -75,9 +84,16 @@ public class GoogleMailSentTest
 		String createdMail = draftPage.getMail().getText();
 		assertTrue(createdMail.contains(subject));
 		draftPage.getMail().click();
-		assertEquals(draftPage.actualAddress(), address);
-		assertEquals(draftPage.actualSubject(), subject);
-		assertEquals(draftPage.actualBody(), body);
+		try
+		{
+			assertEquals(draftPage.actualAddress(), address);
+			assertEquals(draftPage.actualSubject(), subject);
+			assertEquals(draftPage.actualBody(), body);
+		}
+		catch (AssertionError e){
+			Log.error(e.getMessage());
+			Assert.fail();
+		}
 	}
 
 	@Test
@@ -93,7 +109,14 @@ public class GoogleMailSentTest
 		int draftMailsBefore = draftPage.getCountDraftMails();
 		draftPage.sendDraftMail();
 		int draftMailAfter = draftPage.getCountDraftMails();
-		assertEquals(draftMailAfter, draftMailsBefore - 1);
+		try
+		{
+			assertEquals(draftMailAfter, draftMailsBefore - 1);
+		}
+		catch (AssertionError e){
+			Log.error(e.getMessage());
+			Assert.fail();
+		}
 
 	}
 
@@ -113,9 +136,16 @@ public class GoogleMailSentTest
 		sentPage.getMail().click();
 		WebElement subjectSendingMailElement = sentPage.getsubjectSendingMail();
 		String subjectSendingMail = subjectSendingMailElement.getText();
-		assertEquals(sendingDraftBody, subjectSendingMail);
-		sentPage.deleteSentMessage();
-		assertTrue(!subjectSendingMailElement.isDisplayed());
+		try
+		{
+			assertEquals(sendingDraftBody, subjectSendingMail);
+		}
+		catch (AssertionError e){
+			Log.error(e.getMessage());
+			Assert.fail();
+		}
+//		sentPage.deleteSentMessage();
+//		assertTrue(!subjectSendingMailElement.isDisplayed());
 	}
 
 	@Test
@@ -130,7 +160,13 @@ public class GoogleMailSentTest
 		inboxPage.openContextMenu();
 		inboxPage.openSocialTab();
 		String inboxMailSocial = inboxPage.getTheLastSocialMail();
-		assertEquals(inboxMailPrimary, inboxMailSocial);
+		try{
+			assertEquals(inboxMailPrimary, inboxMailSocial);
+		}
+		catch (AssertionError e){
+			Log.error(e.getMessage());
+			Assert.fail();
+		}
 	}
 
 	@Test
@@ -145,7 +181,14 @@ public class GoogleMailSentTest
 		inboxPage.dragAnddropMailToPromotionsTab();
 		inboxPage.openPromotionTab();
 		String inboxMailPromotions = inboxPage.getTheLastSocialMail();
-		assertEquals(inboxMailPromotions, inboxMailPrimary);
+		try
+		{
+			assertEquals(inboxMailPromotions, inboxMailPrimary);
+		}
+		catch (AssertionError e){
+			Log.error(e.toString());
+			Assert.fail();
+		}
 	}
 
 	@Test
@@ -156,7 +199,14 @@ public class GoogleMailSentTest
 		loginPage.openPage();
 		loginPage.signIn(Account.USERNAME1, Account.PASSWORD);
 		accountInformation.logOut();
-		assertTrue(startPage.getloginButton().isDisplayed());
+		try
+		{
+			assertTrue(startPage.getloginButton().isDisplayed());
+		}
+		catch (AssertionError e){
+			Log.error(e.getMessage());
+			Assert.fail();
+		}
 	}
 
 	@AfterMethod

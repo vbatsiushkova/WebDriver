@@ -56,8 +56,8 @@ public class DraftPage extends AbstractMailPage
 		Waiter.wait(driver, sendButton);
 		Log.info("Draft Mail is sent");
 		sendButton.click();
-		Log.info("Wait until mail is disappeared from draft mails");
-		Waiter.waitElementIsAbsent(driver, getNewlyCreatedMailInDraft, draftMailText);
+//		Log.info("Wait until mail is disappeared from draft mails");
+//		Waiter.waitElementIsAbsent(driver, getNewlyCreatedMailInDraft, draftMailText);
 	}
 
 	public int getCountDraftMails()

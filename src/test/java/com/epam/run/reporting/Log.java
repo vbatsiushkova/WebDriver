@@ -1,13 +1,15 @@
 package com.epam.run.reporting;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by Volha_Batsiushkova on 3/12/2018.
  */
 public class Log
 {
-	public static final Logger log = Logger.getLogger(Log.class);
+	public static final Logger log = LogManager.getLogger(Log.class.getName());
+
 
 	public static void error(String message) {
 		log.error(message);
